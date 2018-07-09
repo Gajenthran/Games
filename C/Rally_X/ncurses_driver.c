@@ -29,7 +29,7 @@ Driver ncurses_driver = {
 #define GAME (ncurses_driver.game)
 
 static char tiles[NCell] = {' ', '.', '#', '+', '!', '%','O', 'Y'};
-static const char* sprites[NSprite] = {
+static const char* sprites[NEntity] = {
     "ooo@<<<@>>>@^^^@vvv@", 
     "ooo@<<<@>>>@^^^@vvv@", 
     "ooo@<<<@>>>@^^^@vvv@", 
@@ -56,57 +56,50 @@ static void start(void(*callback)(void*)) {
 
 static int get_move(void) {
     int car = getch();
-    static int lastMove = Nothing;
-    lastMove = GAME->entity[0].dir;
+    static int last_move = Nothing;
+    last_move = GAME->entity[0].dir;
 
     switch(car) {
         case 'z':
-            lastMove = Up;
+            last_move = Up;
             break;
-
         case 'q':
-            lastMove = Left;
+            last_move = Left;
             break;
-
         case 'w':
-            lastMove = Down;
+            last_move = Down;
             break;
-
         case 'd':
-            lastMove = Right;
+            last_move = Right;
             break;
-
         case 'k':
-            if (GAME->entity[0].fuel > SmFuel * -1) {
+            if(GAME->entity[0].fuel > SmFuel * -1) {
                 GAME->entity[0].smoke = On;
                 GAME->entity[0].fuel += SmFuel;
-
             }
             break;
-
         case 'p':
             quit_game();
-
         default:
             break;
     }
 
-    return lastMove;
+    return last_move;
 }
 
-static int high_score (void) {
+static int high_score(void) {
     static int score = -1;
 
-    if (score < 0) {
+    if(score < 0) {
         FILE * file = fopen("files/highscore_nc.txt", "r");
         fscanf(file, "%d", &score);
         fclose(file);
     }
 
-    if (score < GAME->entity[0].score)
+    if(score < GAME->entity[0].score)
         score = GAME->entity[0].score;
 
-    if (GAME->entity[0].life <= 0 || GAME->entity[0].level > NLevel) {
+    if(GAME->entity[0].life <= 0 || GAME->entity[0].level > NLevel) {
         FILE *file = fopen("files/highscore_nc.txt", "w");
         fprintf(file, "%d", score);
         fclose(file);
@@ -114,7 +107,8 @@ static int high_score (void) {
 
     return score;
 }
-static void show_data (void) {
+
+/* static void show_data(void) {
     int checkpt = 0, xData = GAME->screen_w, yData = 3, wData = 10, hData = 5;
     DataC data = {
         .fuel_x = xData + 10,
@@ -131,8 +125,8 @@ static void show_data (void) {
         .hs_y = yData * 0
     };
 
-    for (int i = 0; i < GAME->w * GAME->h; i++)
-        if (GAME->background[i] == Checkpoint || 
+    for(int i = 0; i < GAME->w * GAME->h; i++)
+        if(GAME->background[i] == Checkpoint || 
             GAME->background[i] == LCheckpoint ||
             GAME->background[i] == SCheckpoint)
             checkpt++;
@@ -147,83 +141,82 @@ static void show_data (void) {
     mvprintw(GAME->screen_h + 3, 0, "UP : z", NULL);
     mvprintw(GAME->screen_h + 4, 0, "RIGHT : d", NULL);
     mvprintw(GAME->screen_h + 5, 0, "DOWN : w", NULL);
-    mvprintw(GAME->screen_h + 6, 0, "SMOKE : k (azerty)", NULL);
+    mvprintw(GAME->screen_h + 6, 0, "SMOKE : k(azerty)", NULL);
+} */
 
-}
 static void draw_bg(void) {
 
     int y, x, typecell, l, c;
-    int moveX = (GAME->entity[0].x - GAME->screen_w / 2);
-    int moveY = (GAME->entity[0].y - GAME->screen_h / 2);
+    int move_x =(GAME->entity[0].x - GAME->screen_w / 2);
+    int move_y =(GAME->entity[0].y - GAME->screen_h / 2);
 
-    if (moveY < 0)
-        moveY = 0;
+    if(move_y < 0)
+        move_y = 0;
 
-    if (moveX < 0)
-        moveX = 0;
+    if(move_x < 0)
+        move_x = 0;
 
-    int limitY = GAME->screen_h + moveY;
-    int limitX = GAME->screen_w + moveX;
-    int diffY = 0;
-    int diffX = 0;
-    if (limitY >= GAME->h) {
-        diffY = limitY - GAME->h;
-        limitY = GAME->h;
+    int limit_y = GAME->screen_h + move_y, limit_x = GAME->screen_w + move_x;
+    int diff_y = 0, diff_x = 0;
+    
+    if(limit_y >= GAME->h) {
+        diff_y = limit_y - GAME->h;
+        limit_y = GAME->h;
     }
 
-    if (limitX >= GAME->w) {
-        diffX = limitX - GAME->w;
-        limitX = GAME->w;
+    if(limit_x >= GAME->w) {
+        diff_x = limit_x - GAME->w;
+        limit_x = GAME->w;
     }
-    for(y = moveY - diffY, l = 0; y < limitY; ++y, ++l) {
-        for(x = moveX - diffX, c = 0; x < limitX; ++x, ++c) {
+    for(y = move_y - diff_y, l = 0; y < limit_y; ++y, ++l) {
+        for(x = move_x - diff_x, c = 0; x < limit_x; ++x, ++c) {
             typecell = GAME->background[y * GAME->w + x];
             mvprintw(l, c, "%c", tiles[typecell]);
         }
     }
 
-    show_data();
+    //show_data();
 }
 
 static void draw_entity(int ent_id) {
 
     int x0,y0;
-    int moveX = (GAME->entity[0].x - GAME->screen_w / 2);
-    int moveY = (GAME->entity[0].y - GAME->screen_h / 2);
-    x0 = GAME->entity[ent_id].x - moveX;
-    y0 = GAME->entity[ent_id].y - moveY;
+    int move_x =(GAME->entity[0].x - GAME->screen_w / 2);
+    int move_y =(GAME->entity[0].y - GAME->screen_h / 2);
+    x0 = GAME->entity[ent_id].x - move_x;
+    y0 = GAME->entity[ent_id].y - move_y;
 
-    if (moveY < 0)
+    if(move_y < 0)
         y0 =GAME->entity[ent_id].y;
 
-    if (moveX < 0) 
+    if(move_x < 0) 
         x0 =GAME->entity[ent_id].x;
 
-    int limitY = GAME->screen_h + moveY;
-    int limitX = GAME->screen_w + moveX;
+    int limit_y = GAME->screen_h + move_y;
+    int limit_x = GAME->screen_w + move_x;
 
-    if (limitY >= GAME->h)
-        y0 = GAME->entity[ent_id].y - moveY + (limitY - GAME->h);
+    if(limit_y >= GAME->h)
+        y0 = GAME->entity[ent_id].y - move_y +(limit_y - GAME->h);
 
-    if (limitX >= GAME->w)
-        x0 = GAME->entity[ent_id].x - moveX + (limitX - GAME->w);
+    if(limit_x >= GAME->w)
+        x0 = GAME->entity[ent_id].x - move_x +(limit_x - GAME->w);
 
     static int anim = 0;
-    if (ent_id == 0)
+    if(ent_id == 0)
         mvprintw(y0, x0, "%c", sprites[ent_id][4 * GAME->entity[ent_id].dir + anim]);
 
-    if (ent_id != 0 && GAME->entity[ent_id].y - moveY > 0 && GAME->entity[ent_id].y - moveY < GAME->screen_h &&
-        GAME->entity[ent_id].x - moveX > 0 && GAME->entity[ent_id].x - moveX < GAME->screen_w)
+    if(ent_id != 0 && GAME->entity[ent_id].y - move_y > 0 && GAME->entity[ent_id].y - move_y < GAME->screen_h &&
+        GAME->entity[ent_id].x - move_x > 0 && GAME->entity[ent_id].x - move_x < GAME->screen_w)
         mvprintw(y0, x0, "%c", sprites[ent_id][4 * GAME->entity[ent_id].dir + anim]);
-    anim = (anim + 1) % 4;
+    anim =(anim + 1) % 4;
 }
 
 
 static void lose_game(void) {
-    int moveX = (GAME->entity[0].x - GAME->screen_w / 2);
-    int moveY = (GAME->entity[0].y - GAME->screen_h / 2);
-    int x0 = GAME->entity[0].x - moveX;
-    int y0 = GAME->entity[0].y - moveY;
+    int move_x =(GAME->entity[0].x - GAME->screen_w / 2);
+    int move_y =(GAME->entity[0].y - GAME->screen_h / 2);
+    int x0 = GAME->entity[0].x - move_x;
+    int y0 = GAME->entity[0].y - move_y;
     mvprintw(y0, x0, "BANG", sprites[0][4 * GAME->entity[0].dir]);
     refresh();
     usleep(530000);

@@ -1,18 +1,15 @@
 typedef struct Game Game;
 typedef struct Driver Driver;
 typedef struct Entity Entity;
-typedef struct DataC DataC;
+// typedef struct DataC DataC;
 
 struct Entity {
-    int x, y;
+    int x, y, dir;
     int id;
-    int dir;
     int smoke, standstill;
     int fuel;
     int life;
-    int score;
-    int coeff;
-    int bonus;
+    int score, coeff, bonus;
     int level;
     int lose;
 };
@@ -43,7 +40,22 @@ struct Game {
 
 }; */
 
-enum {
+enum game_info {
+    H = 50,
+    W = 90,
+    ScH = 18, 
+    ScW = 24,
+    Fuel = 2000,
+    MFuel = -3,
+    FFuel = 100,
+    StFuel = 2,
+    SmFuel = -10,
+    scoreFlag = 100,
+    NLevel = 3,
+    NLife = 3
+};
+
+enum tiles {
     Road,
     Tree,
     Forest,
@@ -60,32 +72,22 @@ enum {
     NCell
 };
 
-enum {
+enum entity {
     Player,
     Random,
     Miner,
     Tank,
-    NSprite
+    NEntity
 };
 
-enum {
-    Nothing, Left, Right, Up, Down
+enum dir {
+    Nothing, Left, Right, Up, Down, NDir
 };
 
 enum {
     Off, On
 };
 
-enum {
-    Fuel = 2000,
-    MFuel = -3,
-    FFuel = 100,
-    StFuel = 2,
-    SmFuel = -10,
-    scoreFlag = 100,
-    NLevel = 3,
-    NLife = 3
-};
 
 void init_game(const Driver*);
 void init_value(void);
