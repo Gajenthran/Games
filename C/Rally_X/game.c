@@ -21,6 +21,18 @@ static void init_player(void) {
     g.entity[Player].coeff = g.entity[Player].bonus = 1;
 }
 
+static void init_enemy(void) {
+    int ent_id;
+    for(ent_id = Random; ent_id < NEntity; ent_id++) {
+        if(ent_id > g.entity[Player].level)
+            continue;
+        g.entity[ent_id].x = (10 * ent_id) + 20;
+        g.entity[ent_id].y = 15;
+        g.entity[ent_id].id = ent_id;
+        g.entity[ent_id].dir = Right;
+    }
+}
+
 static char * load_level(void) {
     FILE * file = NULL;
     char *lbg = malloc(H * W * sizeof *lbg);
@@ -35,17 +47,6 @@ static char * load_level(void) {
     return lbg;
 }
 
-static void init_enemy(void) {
-    int ent_id;
-    for(ent_id = Random; ent_id < NEntity; ent_id++) {
-        if(ent_id > g.entity[Player].level)
-            continue;
-        g.entity[ent_id].x = (10 * ent_id) + 20;
-        g.entity[ent_id].y = 15;
-        g.entity[ent_id].id = ent_id;
-        g.entity[ent_id].dir = Right;
-    }
-}
 static void next_level(void) {
 	int i;
 
@@ -58,22 +59,22 @@ static void next_level(void) {
     init_enemy();
 }
 
-static void player_loses(void) {
-	int i;
-	init_player();
-    init_enemy();
-    g.entity[Player].life--;
-	for(i = 0; i < H * W; ++i)
-		if(g.background[i] == Smoke)
-			g.background[i] = Road;
-}
-
 static int count_checkpoint(void) {
     int count = 0;
     for(int i = 0; i < H * W; ++i)
         if(bg[i] == Checkpoint || bg[i] == SCheckpoint || bg[i] == LCheckpoint)
             count++;
     return count;
+}
+
+static void player_loses(void) {
+    int i;
+    init_player();
+    init_enemy();
+    g.entity[Player].life--;
+    for(i = 0; i < H * W; ++i)
+        if(g.background[i] == Smoke)
+            g.background[i] = Road;
 }
 
 static void is_win(void) {
@@ -85,6 +86,26 @@ static int distance(int x_player, int y_player, int x_enemy, int y_enemy) {
     int x = x_player - x_enemy;
     int y = y_player - y_enemy;
     return(x * x) +(y * y);
+}
+
+static int get_random_move(int n) {
+    return(int)(n *(rand()/(RAND_MAX + 1.0)));
+}
+
+static int count_object(int typecell) {
+    int count = 0, i;
+    for(i = 0; i < H * W; i++) {
+        if(bg[i] == typecell)
+            count++;
+    }
+    return count;
+}
+
+static void eval_fuel(void) {
+    if(entity[Player].fuel <= 0)
+        entity[Player].standstill = On;
+    else
+        entity[Player].standstill = Off;
 }
 
 static void is_object(void) {
@@ -165,19 +186,6 @@ static void player_attack(void) {
     }   
 }
 
-static int get_random_move(int n) {
-    return(int)(n *(rand()/(RAND_MAX + 1.0)));
-}
-
-static int count_object(int typecell) {
-    int count = 0, i;
-    for(i = 0; i < H * W; i++) {
-        if(bg[i] == typecell)
-            count++;
-    }
-    return count;
-}
-
 static void miner_attack(int ent_id) {
     if(count_object(Rock) >= 10)
         return;
@@ -222,13 +230,6 @@ static void enemy_move(int ent_id) {
     if((entity[Player].x == entity[ent_id].x) && (entity[Player].y == entity[ent_id].y))
         entity[Player].lose = On;
 
-}
-
-static void eval_fuel(void) {
-    if(entity[Player].fuel <= 0)
-        entity[Player].standstill = On;
-    else
-        entity[Player].standstill = Off;
 }
 
 static void move_auto(void) {

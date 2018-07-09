@@ -65,10 +65,9 @@ enum tiles {
     Rock,
     Smoke,
     Score,
-    Life,
+    Bang,
     Map,
     Title,
-    Bang,
     NCell
 };
 

@@ -44,11 +44,11 @@ static char* tiles_files[] = {
     "files/rock.png",
     "files/smoke.png",
     "files/score.png",
-    "files/life.png",
+    "files/bang.png",
     "files/map.png",
-    "files/title.png",
-    "files/bang.png"
+    "files/title.png"
 };
+
 static SDL_Texture* sprites[NEntity];
 static const char* sprites_files[] = { 
     "files/player.png", 
@@ -58,10 +58,12 @@ static const char* sprites_files[] = {
 };
 
 enum { 
-    SZ = 32,
+    SZ = 38,
     FPS = 15,
-    IMG_W = 25,
-    IMG_H = 23
+    TILES_W = 50,
+    TILES_H = 50,
+    ENT_W = 74,
+    ENT_H = 70
 };
 
 static int load_sprites(void) {
@@ -267,9 +269,9 @@ static void draw_bg(void) {
     int y, x, typecell, l, c, is_flag = Off;
     SDL_Rect dst = {.x = 0, .y = 0, .w = SZ, .h = SZ };
     SDL_Rect dstSc = {.x = 0, .y = 0, .w = SZ, .h = SZ };
-    SDL_Rect src = {.x = 0, .y =(GAME->entity[Player].level - 1) * 15, .w = 16, .h = 15};
+    SDL_Rect src = {.x = 0, .y =(GAME->entity[Player].level - 1) * TILES_H, .w = TILES_W, .h = TILES_H};
     SDL_Rect srcSc = {.x = Score * src.w, .y =(GAME->entity[Player].coeff - 2) * 8, .w = 20, .h = 9};
-    SDL_Rect srcBo = {.x = Score * src.w + srcSc.w, .y =(GAME->entity[Player].bonus -1) * 8, .w = 12, .h = 8};
+    SDL_Rect srcBo = {.x = Score * src.w + 18, .y =(GAME->entity[Player].bonus -1) * 8, .w = 20, .h = 8};
 
     int move_x =(GAME->entity[Player].x - GAME->screen_w / 2);
     int move_y =(GAME->entity[Player].y - GAME->screen_h / 2);
@@ -331,7 +333,7 @@ static void draw_entity(int ent_id) {
 
     int move_x =(GAME->entity[Player].x - GAME->screen_w/2);
     int move_y =(GAME->entity[Player].y - GAME->screen_h/2);
-    SDL_Rect src = {.x = 0, .y = 0, .w = IMG_W, .h = IMG_H };
+    SDL_Rect src = {.x = 0, .y = 0, .w = ENT_W, .h = ENT_H };
     SDL_Rect dst = {.x = SZ *(GAME->entity[ent_id].x - move_x), .y = SZ *(GAME->entity[ent_id].y - move_y), .w = SZ, .h = SZ };
 
     if(move_y < 0)
@@ -347,7 +349,7 @@ static void draw_entity(int ent_id) {
     if(limit_x >= GAME->w)
         dst.x = SZ *(GAME->entity[ent_id].x - move_x +(limit_x - GAME->w));
     if(GAME->entity[ent_id].dir == Right) {
-        src.y = IMG_H;
+        src.y = ENT_H;
         if(cur_dir[ent_id] != Right) {
             cur_dir[ent_id] = Right;
             sp[ent_id] = 0;
@@ -361,21 +363,21 @@ static void draw_entity(int ent_id) {
         }
     }
     else if(GAME->entity[ent_id].dir == Left) {
-        src.y = IMG_H * 3;
+        src.y = ENT_H * 3;
         if(cur_dir[ent_id] != Left) {
             cur_dir[ent_id] = Left;
             sp[ent_id] = 0;
         }
     }
     else if(GAME->entity[ent_id].dir == Down) {
-        src.y = IMG_H * 2;
+        src.y = ENT_H * 2;
         if(cur_dir[ent_id] != Down) {
             cur_dir[ent_id] = Down;
             sp[ent_id] = 0;
         }
     }
 
-    src.x = sp[ent_id] * IMG_W;
+    src.x = sp[ent_id] * ENT_W;
     SDL_RenderCopy(ren, sprites[ent_id], &src, &dst);
     if(sp[ent_id] < 2)
         ++sp[ent_id];
@@ -384,9 +386,9 @@ static void draw_entity(int ent_id) {
 static void lose_game(void) {
     int move_x =(GAME->entity[Player].x - GAME->screen_w/2);
     int move_y =(GAME->entity[Player].y - GAME->screen_h/2);
-    SDL_Rect src = {.x = 0, .y = 0, .w = ScW, .h = ScH };
+    SDL_Rect src = {.x = Bang * TILES_W, .y = 0, .w = TILES_W, .h = TILES_H };
     SDL_Rect dst = {.x = SZ *(GAME->entity[Player].x - move_x), .y = SZ *(GAME->entity[Player].y - move_y), .w = SZ, .h = SZ};
-    SDL_RenderCopy(ren, tiles[Bang], &src, &dst);
+    SDL_RenderCopy(ren, tiles[Map], &src, &dst);
     SDL_RenderPresent(ren);
     usleep(600000);
 }
