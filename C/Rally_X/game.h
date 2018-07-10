@@ -52,7 +52,7 @@ enum game_info {
     SmFuel = -10,
     scoreFlag = 100,
     NLevel = 3,
-    NLife = 3
+    NLife = 3,
 };
 
 enum tiles {
@@ -66,9 +66,9 @@ enum tiles {
     Smoke,
     Score,
     Bang,
-    Map,
-    Title,
-    NCell
+    NCell,
+    Map = 0, 
+    Title = 1
 };
 
 enum entity {

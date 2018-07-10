@@ -31,31 +31,25 @@ Driver sdl_driver = {
 
 #define GAME (sdl_driver.game)
 
-static SDL_Window *win;
-static SDL_Renderer *ren;
-static SDL_Texture* tiles[NCell];
 static char* tiles_files[] = { 
-    "files/road.png", 
-    "files/tree.png", 
-    "files/forest.png", 
-    "files/checkpoint.png",
-    "files/s_checkpoint.png",
-    "files/l_checkpoint.png",
-    "files/rock.png",
-    "files/smoke.png",
-    "files/score.png",
-    "files/bang.png",
-    "files/map.png",
+    "files/map.png", 
     "files/title.png"
 };
 
-static SDL_Texture* sprites[NEntity];
 static const char* sprites_files[] = { 
     "files/player.png", 
     "files/enemy.png", 
     "files/enemy.png",
     "files/enemy.png" 
 };
+
+#define ntiles_files (sizeof(tiles_files)/ sizeof(*tiles_files))
+#define nsprites_files (sizeof(sprites_files)/ sizeof(*sprites_files))
+
+static SDL_Window *win;
+static SDL_Renderer *ren;
+static SDL_Texture* tiles[ntiles_files];
+static SDL_Texture* sprites[nsprites_files];
 
 enum { 
     SZ = 38,
@@ -88,7 +82,7 @@ static int load_sprites(void) {
 static int load_tiles(void) {
     int i;
     SDL_Surface *png;
-    for(i = 0; i < NCell; ++i) {
+    for(i = 0; i < ntiles_files; ++i) {
         png = IMG_Load(tiles_files[i]);
         if(png == NULL){
             SDL_DestroyRenderer(ren);
