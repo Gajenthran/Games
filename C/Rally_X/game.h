@@ -1,7 +1,6 @@
 typedef struct Game Game;
 typedef struct Driver Driver;
 typedef struct Entity Entity;
-// typedef struct DataC DataC;
 
 struct Entity {
     int x, y, dir;
@@ -20,25 +19,6 @@ struct Game {
     unsigned char* background;
     Entity* entity;
 };
-
-
-/* struct DataC {
-    int title_x;
-    int title_y;
-    int fuel_x;
-    int fuel_y;
-    int map_x;
-    int map_y;
-    int life_x;
-    int life_y;
-    int score_x;
-    int score_y;
-    int level_x;
-    int level_y;
-    int hs_x;
-    int hs_y;
-
-}; */
 
 enum game_info {
     H = 50,
