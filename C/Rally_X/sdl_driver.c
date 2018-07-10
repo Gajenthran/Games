@@ -7,6 +7,7 @@
 #endif
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_ttf.h>
 
 static int init(const Game* game);
 static void start(void(*callback)(void*));
@@ -43,13 +44,25 @@ static const char* sprites_files[] = {
     "files/enemy.png" 
 };
 
+static const char* texts[] = {
+    "Fuel : ",
+    "Score : ",
+    "Highscore : ",
+    "Life : "
+};
+
 #define ntiles_files (sizeof(tiles_files)/ sizeof(*tiles_files))
 #define nsprites_files (sizeof(sprites_files)/ sizeof(*sprites_files))
+#define ntexts (sizeof(texts)/ sizeof(*texts))
 
 static SDL_Window *win;
 static SDL_Renderer *ren;
 static SDL_Texture* tiles[ntiles_files];
 static SDL_Texture* sprites[nsprites_files];
+static SDL_Texture* textTex[ntexts];
+static SDL_Color white = { 255, 255, 255, 200 };
+static TTF_Font * font = NULL;
+static int dataOption = 0;
 
 enum { 
     SZ = 38,
@@ -59,6 +72,26 @@ enum {
     ENT_W = 74,
     ENT_H = 70
 };
+
+static int load_texts(void) {
+    int i;
+    font = TTF_OpenFont("files/Arial.ttf", 30);
+    SDL_Surface *t;
+    for(i = 0; i < ntexts; ++i) {
+        t = TTF_RenderText_Solid(font, texts[i], white);
+        if(t == NULL) {
+            SDL_DestroyRenderer(ren);
+            SDL_DestroyWindow(win);
+            printf("Error: %s\n", SDL_GetError());
+            SDL_Quit();
+            return 1;
+        }
+
+        textTex[i] = SDL_CreateTextureFromSurface(ren, t);
+        SDL_FreeSurface(t);
+    }
+    return 0;
+}
 
 static int load_sprites(void) {
     int i;
@@ -104,6 +137,12 @@ static int init(const Game* game) {
         printf("SDL_Init Error: %s\n",  SDL_GetError());
         return 1;
     }
+
+    if(TTF_Init() < 0) {
+        printf("TTF_Init Error: %s\n", SDL_GetError());
+        return 1;
+    }
+
     win = SDL_CreateWindow("Rally_X", 0, 0, GAME->screen_w * SZ, GAME->screen_h * SZ, SDL_WINDOW_SHOWN);
     if(win == NULL) {
         printf("SDL_CreateWindow Error: %s\n", SDL_GetError());
@@ -117,11 +156,14 @@ static int init(const Game* game) {
         SDL_Quit();
         return 1;
     }
+
     if(load_tiles())
         return 1;
     if(load_sprites())
         return 1;
-    
+    if(load_texts())
+        return 1;
+
     return 0;
 }
 
@@ -159,6 +201,9 @@ static int get_move(void) {
     if(state[SDL_SCANCODE_Z] || state[SDL_SCANCODE_DOWN])
         last_move = Down;
 
+    if(state[SDL_SCANCODE_P])
+        dataOption = !dataOption;
+
     return last_move;
 }
 
@@ -181,82 +226,49 @@ static int high_score(void) {
     return score;
 }
 
-/* static void show_data(void) {
+static void draw_data(void) {
+    int i;
     SDL_SetRenderDrawBlendMode(ren, SDL_BLENDMODE_BLEND);
-    int data_w = 30 * GAME->screen_w/GAME->w, y, x, l, c, ent_id, forestH = 10, forestW = 24;
+    const int ty = 10;
+    SDL_Surface *t;
+    SDL_Texture *texScore;
 
-    DataC data = {
-        .title_x =(GAME->screen_w - data_w) * SZ + SZ,
-        .title_y = 1 * SZ,
-        .fuel_x =(GAME->screen_w - data_w) * SZ + SZ,
-        .fuel_y = 2 * SZ + 50,
-        .map_x = 108 *(GAME->screen_w *(24 *(((30 * 24/90)* SZ)/48)/24)) /(24 *(GAME->screen_w *((data_w * SZ)/48)/24)),
-        .map_y = 35 *(GAME->screen_h *(18 *(((30 * 24/90)* SZ)/48)/18)) /(18 *(GAME->screen_h *((data_w * SZ)/48)/18)),
-        .life_x =(GAME->screen_w - data_w) * SZ + SZ,
-        .life_y = GAME->screen_h *(14* SZ)/18, 
-    };
+    char wr_score[256], wr_high_score[256];
+    sprintf(wr_score, "%d", GAME->entity[Player].score);
+    sprintf(wr_high_score, "%d", high_score());
 
+    SDL_Rect rect = { .x = 0, .y = 0, .w = GAME->screen_w * SZ, .h = 50};
     SDL_SetRenderDrawColor(ren, 0, 0, 0, 200);
-    SDL_Rect dataRect = { .x =(GAME->screen_w - data_w) * SZ, .y = 0, .w = data_w * SZ, .h = GAME->screen_h * SZ };
-    SDL_RenderFillRect(ren, &dataRect);
+    SDL_RenderFillRect(ren, &rect);
 
-    SDL_Rect titleRect = { .x = data.title_x, .y = data.title_y, .w =(GAME->screen_w *150)/18, .h = 50 };
-    SDL_RenderCopy(ren, tiles[Title], NULL, &titleRect);
-
-    SDL_SetRenderDrawColor(ren, 255, 255, 255, 200);
-    SDL_Rect rulerRect = { .x = data.fuel_x, .y = data.fuel_y, .w = GAME->screen_w *((Fuel*200)/Fuel)/24, .h = 20 };
-    SDL_RenderDrawRect(ren, &rulerRect);
-
-    SDL_SetRenderDrawColor(ren, 255, 255, 0, 200);
-    SDL_Rect fuelRect = { .x = data.fuel_x, .y = data.fuel_y, .w = GAME->screen_w *((GAME->entity[Player].fuel*200)/Fuel)/24, .h = 20 };
+    SDL_Rect fuel = { .x = GAME->screen_w * SZ / 10, .y = ty + 5, .w = GAME->screen_w *((GAME->entity[Player].fuel*200)/Fuel)/24, .h = 20};
     SDL_SetRenderDrawColor(ren, 255, GAME->entity[Player].fuel*(255)/Fuel, 0, 200);
-    SDL_RenderFillRect(ren, &fuelRect);
+    SDL_RenderFillRect(ren, &fuel);
+    SDL_Rect tfuel = { .x = GAME->screen_w * SZ / 10 - SZ, .y = ty, .w = 40, .h = 30 };
+    SDL_RenderCopy(ren, textTex[TFuel], NULL, &tfuel);
 
-    SDL_SetRenderDrawColor(ren, 5, 0, 255, 200);
-    SDL_Rect entRect = {.x = 0, .y = 0, .w = GAME->screen_w *(dataRect.w/48)/24, .h = GAME->screen_w *(dataRect.w/48)/24};
-    SDL_RenderFillRect(ren, &entRect);
+    SDL_Rect tscore = { .x = GAME->screen_w * SZ / 2.5 - SZ, .y = ty, .w = 40, .h = 30};
+    SDL_RenderCopy(ren, textTex[TScore], NULL, &tscore);
+    SDL_Rect twr_score = { .x = GAME->screen_w * SZ / 2.5, .y = ty - 5, .w = 40, .h = 40};
+    t = TTF_RenderText_Solid(font, wr_score, white);
+    texScore = SDL_CreateTextureFromSurface(ren, t);
+    SDL_RenderCopy(ren, texScore, NULL, &twr_score);
+    SDL_FreeSurface(t);
 
-    for(y = forestH, l = data.map_y; y < GAME->h - forestH; y++, l++) {
-        for(x = forestW, c = data.map_x; x < GAME->w -forestW; x++, c++) {
-            entRect.x = c* entRect.w;
-            entRect.y = l* entRect.h;
+    SDL_Rect thigh_score = { .x = GAME->screen_w * SZ / 1.5 - SZ * 1.5, .y = ty, .w = 60, .h = 30};
+    SDL_RenderCopy(ren, textTex[THighScore], NULL, &thigh_score);
+    SDL_Rect twr_high_score = { .x = GAME->screen_w * SZ / 1.5, .y = ty - 5, .w = 40, .h = 40};
+    t = TTF_RenderText_Solid(font, wr_high_score, white);
+    texScore = SDL_CreateTextureFromSurface(ren, t);
+    SDL_RenderCopy(ren, texScore, NULL, &twr_high_score);
+    SDL_FreeSurface(t);
 
-            int typecell = GAME->background[y * GAME->w + x];
-            if(typecell == Checkpoint || typecell == SCheckpoint || typecell == LCheckpoint) {
-                SDL_SetRenderDrawColor(ren, 255, 255, 0, 200);
-                SDL_RenderFillRect(ren, &entRect);
-            }
-
-            else if(typecell != Forest) {
-                SDL_SetRenderDrawColor(ren, 0, 0, 255, 200);
-                SDL_RenderFillRect(ren, &entRect);
-            }
-
-            for(ent_id = 0; ent_id < NEntity; ent_id++) {
-                if(GAME->entity[ent_id].x == x && GAME->entity[ent_id].y == y) {
-                    if(ent_id >= FEnemy) {
-                        SDL_SetRenderDrawColor(ren, 255, 0, 0, 200);
-                        SDL_RenderFillRect(ren, &entRect);
-                    }
-
-                    else if(ent_id == Player) {
-                        SDL_SetRenderDrawColor(ren, 255, 255, 255, 200);
-                        SDL_RenderDrawRect(ren, &entRect);
-                    }
-                }
-            }
-        }
+    for(i = 0; i < GAME->entity[Player].life; i++) {
+        SDL_Rect life = { .x = GAME->screen_w * SZ / 1 - SZ * (i+1), .y = ty, .w = 30, .h = 30};
+        SDL_Rect src = { .x = TILES_W * Life, .y = 0, .w = 10, .h = 10};
+        SDL_RenderCopy(ren, tiles[Map], &src, &life);
     }
-
-    SDL_SetRenderDrawColor(ren, 255, 255, 0, 200); 
-    SDL_Rect lifeRect = {.x = data.life_x +(c * 20), .y = data.life_y, .w = 20, .h = 20}; 
-    for(c = 0; c < GAME->entity[Player].life; c++) {
-        lifeRect.x = data.life_x +(c * lifeRect.w) + 10;
-        SDL_RenderCopy(ren, tiles[Life], NULL, &lifeRect);
-    }
-
-    high_score();
-} */
+}
 
 static void draw_bg(void) {
     SDL_RenderClear(ren);
@@ -318,7 +330,7 @@ static void draw_bg(void) {
         SDL_RenderCopy(ren, tiles[Map], &srcBo, &dstSc);
     }
 
-    // show_data();
+    if(dataOption) draw_data();
 }
 
 static void draw_entity(int ent_id) {

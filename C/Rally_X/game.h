@@ -66,6 +66,7 @@ enum tiles {
     Smoke,
     Score,
     Bang,
+    Life,
     NCell,
     Map = 0, 
     Title = 1
@@ -83,9 +84,8 @@ enum dir {
     Nothing, Left, Right, Up, Down, NDir
 };
 
-enum {
-    Off, On
-};
+enum { Off, On };
+enum { TFuel, TScore, THighScore, TLife };
 
 
 void init_game(const Driver*);

@@ -39,7 +39,7 @@ static char * load_level(void) {
     assert(lbg);
 
     char level_file[256];
-    sprintf(level_file, "files/level/level%d.txt", entity[Player].level);
+    sprintf(level_file, "level/level%d.txt", entity[Player].level);
     file = fopen(level_file, "r+");
     fgets(lbg, H*W, file);
     fclose(file);
