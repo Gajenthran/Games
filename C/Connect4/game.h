@@ -12,7 +12,7 @@ typedef struct game Game;
 typedef struct player Player;
 
 void initGame(Game *g, Driver *dr);
-void callback(Game *g);
+void callback(Game *g, Driver *dr);
 
 struct player {
 	char* name;		

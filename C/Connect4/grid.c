@@ -5,21 +5,21 @@
 
 void initGrid(Game *g) {
 	int pos;
-	for(pos = 0; pos < g->rows * jeu->cols; pos++)
-		jeu->grid[pos] = EMPTY;
+	for(pos = 0; pos < g->rows * g->cols; pos++)
+		g->grid[pos] = EMPTY;
 }
 
 int fullGrid(Game *g) {
 	int pos;
-	for(pos = 0; pos < jeu->rows * jeu->cols; pos++)
-		if(jeu->grid[pos] == EMPTY)
+	for(pos = 0; pos < g->rows * g->cols; pos++)
+		if(g->grid[pos] == EMPTY)
 			return 0;
 	return 1;
 }
 
 int validPosition(Game *g, int x, int y) {
-	return (y >= 0 && y < g->ligne &&
-			x >= 0 && x < g->col);
+	return (y >= 0 && y < g->rows &&
+			x >= 0 && x < g->cols);
 }
 
 int checkAlignment(Game *g, int color, int x, int y, int dx, int dy) {
