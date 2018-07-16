@@ -30,7 +30,7 @@ int checkAlignment(Game *g, int color, int x, int y, int dx, int dy) {
 		else
 			return 0;
 
-		if(count == NCMPT)
+		if(count == NCOUNT)
 			return 1;
 
 		x += dx;

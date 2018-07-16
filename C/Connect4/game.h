@@ -8,19 +8,19 @@
 
 enum { MENU, GAME, END };
 
-typedef struct game Game;
-typedef struct player Player;
+typedef struct Game Game;
+typedef struct Player Player;
 
 void initGame(Game *g, Driver *dr);
 void callback(Game *g, Driver *dr);
 
-struct player {
+struct Player {
 	char* name;		
 	int color;	
 	int score;
 };
 
-struct game {
+struct Game {
 	int rows;		
 	int cols;		
 	int *grid;	

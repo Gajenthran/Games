@@ -19,7 +19,8 @@ void initGame(Game *g, Driver *dr) {
 }
 
 void callback(Game *g, Driver *dr) {
-	for(;;) {
+	while(!dr->in.quit){
+		updateEvents(dr);
 		clear(dr);
 		displayGrid(g, dr);
 		update(dr); 

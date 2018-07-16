@@ -1,7 +1,7 @@
 #ifndef GRID_H___
 #define GRID_H___
 
-#define NCMPT 4
+#define NCOUNT 4
 #define NALIGN 4
 
 void	initGrid(Game *g);

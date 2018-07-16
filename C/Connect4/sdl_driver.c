@@ -32,6 +32,7 @@ int initSDL(Driver* driver) {
 		return 1;
 	}
 
+	memset(&driver->in, 0, sizeof(driver->in));
 	if(loadFiles(driver))
 		return 1;
 
@@ -55,4 +56,39 @@ static int loadFiles(Driver *driver) {
 		SDL_FreeSurface(png);
 	}
 	return 0;
+}
+
+void updateEvents(Driver *dr) {
+	unsigned int t0, t = SDL_GetTicks();
+	SDL_Event ev;
+	srand((unsigned int)time(NULL));
+	while(SDL_PollEvent(&ev) != 0) {
+		switch(ev.type) {
+			case SDL_QUIT:
+				dr->in.quit = 1;
+				break;
+			case SDL_KEYDOWN:
+				if(ev.key.keysym.sym == SDLK_LEFT) 
+					dr->in.key = -1;
+				else if(ev.key.keysym.sym == SDLK_LEFT)
+					dr->in.key = 1;
+				break;
+			case SDL_MOUSEBUTTONDOWN:
+				if(ev.button.button == SDL_BUTTON_LEFT) {
+					dr->in.mbx = ev.button.x;
+					dr->in.mby = ev.button.y;
+				}
+			case SDL_MOUSEMOTION:
+				dr->in.mmx = ev.button.x;
+				dr->in.mmy = ev.button.y;
+				break;
+			default:
+				break;
+		}
+
+		t0 = SDL_GetTicks() - t;
+
+		if(t0 < 20)
+			SDL_Delay(20 - t0);
+	}
 }
