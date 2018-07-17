@@ -2,11 +2,11 @@
 #include <stdlib.h>
 #include "player.h"
 
-void initJoueur(Game *g) {
+void initPlayer(Game *g) {
 	int pId;
 
 	for(pId = 0; pId < NPLAYER; pId++) {
-		g->player[pId].color = pId;
+		g->player[pId].color = pId+1;
 		g->player[pId].score = 0;	
 	}
 }

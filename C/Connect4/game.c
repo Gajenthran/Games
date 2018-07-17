@@ -17,6 +17,7 @@ void initGame(Game *g, Driver *dr) {
 	g->state = _gameState;
 
 	initSDL(dr, 640, 480);
+	initPlayer(g);
 	initGrid(g);
 	callback(g, dr);
 }
@@ -35,7 +36,7 @@ void menu(Game *g, Driver *dr) {
 
 void play(Game *g, Driver* dr) {
 	static int pId = 0;
-	if(putDisc(g, dr, pId+1))
+	if(putDisc(g, dr, g->player[pId].color))
 		pId = (pId + 1) % NPLAYER;
 	if(fullGrid(g)) g->state = END;
 	if(checkWinner(g)) g->state = END;
