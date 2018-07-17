@@ -3,10 +3,10 @@
 
 #include "sdl_driver.h"
 
-#define ROWS 6
-#define COLS 7
+#define ROWS 7
+#define COLS 8
 
-enum { MENU, GAME, END };
+enum states { MENU, GAME, H_SCORE, END, NSTATES };
 
 typedef struct Game Game;
 typedef struct Player Player;
