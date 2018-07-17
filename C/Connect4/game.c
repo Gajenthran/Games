@@ -3,7 +3,6 @@
 #include "game.h"
 #include "grid.h"
 #include "display.h"
-#include "menu.h"
 #include "player.h"
 
 static int _grid[ROWS * COLS];
@@ -22,11 +21,27 @@ void initGame(Game *g, Driver *dr) {
 	callback(g, dr);
 }
 
+
+void menu(Game *g, Driver *dr) {
+	int i;
+	for(i = 2; i < NmTEX; i++) {
+		if(elementClicked(dr, dr->mTexCoord[i].x, 
+			dr->mTexCoord[i].y, 
+			dr->mTexCoord[i].w + dr->mTexCoord[i].x, 
+			dr->mTexCoord[i].h + dr->mTexCoord[i].y))
+			g->state = i-1;
+	}
+}
+
 void play(Game *g, Driver* dr) {
 	static int pId = 0;
 	if(putDisc(g, dr, pId+1))
 		pId = (pId + 1) % NPLAYER;
+	if(fullGrid(g)) g->state = END;
+	if(checkWinner(g)) g->state = END;
 }
+
+
 void callback(Game* g, Driver* dr) {
 	int i = 0;
 	while(!dr->in.quit){

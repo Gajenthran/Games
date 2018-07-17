@@ -4,6 +4,8 @@
 #define NCOUNT 4
 #define NALIGN 4
 
+#include "game.h"
+
 void	initGrid(Game *g);
 int 	fullGrid(Game *g);
 int 	validPosition(Game *g, int x, int y);

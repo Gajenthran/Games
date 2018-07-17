@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "game.h"
 #include "grid.h"
 
 void initGrid(Game *g) {

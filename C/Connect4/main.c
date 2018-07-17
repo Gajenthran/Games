@@ -1,5 +1,5 @@
-#include "game.h"
 #include "sdl_driver.h"
+#include "game.h"
 
 int main(void) {
 	Game game;

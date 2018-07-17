@@ -17,7 +17,7 @@ int chooseColumn(Game *g, Driver *dr) {
 		for(c = DX; c < g->cols + DX; c++) {
 			SDL_Rect dst = { .x = c * SZ, .y = r * SZ, .w = SZ, .h = SZ };
 			if(elementClicked(dr, dst.x, 0, dst.x + dst.w, dr->windowHeight)) {
-				return c- DX;
+				return c - DX;
 			}
 		}
 	}
