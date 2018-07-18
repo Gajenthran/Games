@@ -14,6 +14,18 @@ static char* gameFiles[NgTEX] = {
 	"files/discs.png"
 };
 
+static char* endFiles[NeTEX] = {
+	"files/background.png",
+	"files/grid.png",
+	"files/restart.png",
+	"files/end.png"
+};
+
+static const char* texts[NTEXT] = {
+    "player 1 ",
+    "player 2 "
+};
+
 int initSDL(Driver* driver, int windowWidth, int windowHeight) {
 	int i;
 	driver->windowWidth = windowWidth;
@@ -45,10 +57,30 @@ int initSDL(Driver* driver, int windowWidth, int windowHeight) {
 	}
 
 	memset(&driver->in, 0, sizeof(driver->in));
-	if(loadmFiles(driver) || loadgFiles(driver))
+	if(loadmFiles(driver) || loadgFiles(driver) || loadeFiles(driver) || loadTexts(driver))
 		return 1;
 
 	initTexCoord(driver);
+	return 0;
+}
+
+static int loadTexts(Driver *dr) {
+	int i;
+	SDL_Color black = { 0, 0, 0, 255 };
+	TTF_Font * font = TTF_OpenFont("files/LearningCurve.ttf", 32);
+	SDL_Surface *t;
+	for(i = 0; i < NTEXT; ++i) {
+		t = TTF_RenderText_Solid(font, texts[i], black);
+		if(t == NULL) {
+			SDL_DestroyRenderer(dr->ren);
+			SDL_DestroyWindow(dr->win);
+			printf("Error: %s\n", SDL_GetError());
+			SDL_Quit();
+			return 1;
+		}
+		dr->textTex[i] = SDL_CreateTextureFromSurface(dr->ren, t);
+		SDL_FreeSurface(t);
+	}
 	return 0;
 }
 
@@ -90,6 +122,27 @@ static int loadgFiles(Driver *driver) {
 	return 0;
 }
 
+
+static int loadeFiles(Driver *driver) {
+	int i;
+	SDL_Surface *png;
+	for(i = 0; i < NeTEX; ++i) {
+		png = IMG_Load(endFiles[i]);
+		if(png == NULL){
+			SDL_DestroyRenderer(driver->ren);
+			SDL_DestroyWindow(driver->win);
+			printf("Error: %s\n", SDL_GetError());
+			SDL_Quit();
+			return 1;
+		}
+
+		driver->eTex[i] = SDL_CreateTextureFromSurface(driver->ren, png);
+		SDL_FreeSurface(png);
+	}
+
+	return 0;
+}
+
 static void initTexCoord(Driver *dr) {
 	int SZw = 270, SZh = 30, i;
 
@@ -100,6 +153,26 @@ static void initTexCoord(Driver *dr) {
  		dr->mTexCoord[i].y = 126 * i - 137; 
 		dr->mTexCoord[i].w = SZw; dr->mTexCoord[i].h = SZh * 4; 
 	}
+
+	dr->eTexCoord[TEX_SQUARE].x = dr->windowWidth/4; 
+	dr->eTexCoord[TEX_SQUARE].y = dr->windowHeight/4;
+	dr->eTexCoord[TEX_SQUARE].w = dr->windowWidth/2; 
+	dr->eTexCoord[TEX_SQUARE].h = dr->windowHeight/2;
+
+	dr->eTexCoord[TEX_NAME].x = dr->windowWidth/3 - 20; 
+	dr->eTexCoord[TEX_NAME].y = dr->windowHeight/4 + 20;
+	dr->eTexCoord[TEX_NAME].w = 250; 
+	dr->eTexCoord[TEX_NAME].h = 100;
+
+	dr->eTexCoord[TEX_RESTART].x = dr->windowWidth/3 - 20; 
+	dr->eTexCoord[TEX_RESTART].y = dr->windowHeight/4 + dr->eTexCoord[TEX_NAME].h + 30;
+	dr->eTexCoord[TEX_RESTART].w = dr->eTexCoord[TEX_NAME].w / 2.5; 
+	dr->eTexCoord[TEX_RESTART].h = dr->eTexCoord[TEX_NAME].h / 1.5;
+
+	dr->eTexCoord[TEX_END].x = dr->eTexCoord[TEX_NAME].w + dr->eTexCoord[TEX_NAME].x - dr->eTexCoord[TEX_RESTART].w; 
+	dr->eTexCoord[TEX_END].y = dr->eTexCoord[TEX_RESTART].y;
+	dr->eTexCoord[TEX_END].w = dr->eTexCoord[TEX_RESTART].w; 
+	dr->eTexCoord[TEX_END].h = dr->eTexCoord[TEX_RESTART].h; 
 }
 
 void updateEvents(Driver *dr) {

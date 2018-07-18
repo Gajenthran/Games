@@ -26,7 +26,7 @@ void initGame(Game *g, Driver *dr) {
 
 void menu(Game *g, Driver *dr) {
 	int i;
-	for(i = 2; i < NmTEX; i++) {
+	for(i = TEX_PLAY; i < NmTEX; i++) {
 		if(elementClicked(dr, dr->mTexCoord[i].x, 
 			dr->mTexCoord[i].y, 
 			dr->mTexCoord[i].w + dr->mTexCoord[i].x, 
@@ -45,6 +45,23 @@ void play(Game *g, Driver* dr) {
 	if(checkWinner(g)) g->state = END;
 }
 
+void end(Game *g, Driver *dr) {
+	int i;
+	if(elementClicked(dr, dr->eTexCoord[TEX_RESTART].x, 
+		dr->eTexCoord[TEX_RESTART].y, 
+		dr->eTexCoord[TEX_RESTART].w + dr->eTexCoord[TEX_RESTART].x, 
+		dr->eTexCoord[TEX_RESTART].h + dr->eTexCoord[TEX_RESTART].y)) {
+		g->state = MENU;
+		initPlayer(g);
+		initGrid(g);
+	}
+
+	if(elementClicked(dr, dr->eTexCoord[TEX_END].x, 
+		dr->eTexCoord[TEX_END].y, 
+		dr->eTexCoord[TEX_END].w + dr->eTexCoord[TEX_END].x, 
+		dr->eTexCoord[TEX_END].h + dr->eTexCoord[TEX_END].y))
+		dr->in.quit = 1;
+}
 
 void callback(Game* g, Driver* dr) {
 	while(!dr->in.quit){
@@ -60,7 +77,10 @@ void callback(Game* g, Driver* dr) {
 				displayGame(g, dr);
 				break;
 			case END:
-				exit(0);
+				end(g, dr);
+				displayGame(g, dr);
+				displayEnd(g, dr);
+				break;
 		}
 		updateEvents(dr);
 		update(dr); 

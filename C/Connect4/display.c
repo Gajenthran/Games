@@ -11,6 +11,14 @@ void displayBackground(Game* g, Driver* dr) {
 	}
 }
 
+void displayPlayerName(Game *g, Driver *dr) {
+	int round = g->round % NPLAYER, r, c;
+	SDL_SetTextureAlphaMod(dr->gTex[TEX_DISCS], 255);
+	int y = g->rows + DY - 3, x = g->cols + DX + 2;
+	SDL_Rect dst = { .x = x * SZ, .y = y * SZ, .w = SZ * 3, .h = SZ};
+	SDL_RenderCopy(dr->ren, dr->textTex[round], NULL, &dst);
+}
+
 void displayMenu(Game *g, Driver *dr) {
 	int i;
 	SDL_Rect src = { .x = 0, .y = 0, .w = 1059, .h = 344 };
@@ -39,9 +47,28 @@ void displayPlayerRound(Game *g, Driver *dr) {
 	}
 }
 
+void displayEnd(Game *g, Driver *dr) {
+	int i;
+	SDL_Rect r = { 0, 0, dr->windowWidth, dr->windowHeight };
+	SDL_SetRenderDrawBlendMode(dr->ren, SDL_BLENDMODE_BLEND);
+	SDL_SetRenderDrawColor(dr->ren, 0, 0, 0, 100);
+	SDL_RenderFillRect(dr->ren, &r);
+
+	SDL_SetRenderDrawColor(dr->ren, 250, 250, 250, 255);
+	SDL_RenderFillRect(dr->ren, &dr->eTexCoord[TEX_SQUARE]);
+
+	SDL_SetRenderDrawColor(dr->ren, 0, 0, 0, 255);
+	SDL_RenderDrawRect(dr->ren, &dr->eTexCoord[TEX_NAME]);
+
+	for(i = TEX_RESTART; i < NeTEX; i++) {
+		SDL_RenderCopy(dr->ren, dr->eTex[i], NULL, &dr->eTexCoord[i]);
+	} 
+}
+
 void displayGame(Game *g, Driver *dr) {
 	displayBackground(g, dr);
 	displayPlayerRound(g, dr);
+	displayPlayerName(g, dr);
 	displayGrid(g, dr);
 }
 
@@ -52,7 +79,7 @@ void displayGrid(Game *g, Driver *dr) {
 		for(c = DX; c < g->cols + DX; c++) {
 			SDL_SetTextureAlphaMod(dr->gTex[TEX_DISCS], 150);
 			SDL_Rect dst = { .x = c * SZ, .y = r * SZ, .w = SZ, .h = SZ };
-			if(displayHighlightColumn(g, dr, dst.x))
+			if(displayHighlightColumn(g, dr, dst.x) && g->state == GAME)
 				SDL_SetTextureAlphaMod(dr->gTex[TEX_DISCS], 255);
 			SDL_Rect src = { .x = g->grid[(r-DY) * g->cols + (c-DX)] * (SZ * 2), .y = 0, .w = SZ, .h = SZ };
 			SDL_RenderCopy(dr->ren, dr->gTex[TEX_DISCS], &src, &dst);
