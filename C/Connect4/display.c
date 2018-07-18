@@ -47,6 +47,18 @@ void displayPlayerRound(Game *g, Driver *dr) {
 	}
 }
 
+void displayWinner(Game *g, Driver *dr) {
+	SDL_Rect dst = { 
+		.x = dr->eTexCoord[TEX_NAME].x + 5, 
+		.y = dr->eTexCoord[TEX_NAME].y + 5,
+		.w = SZ * 8,
+		.h = SZ * 3
+	};
+
+	int player = (g->round + 1) % NPLAYER;
+	SDL_RenderCopy(dr->ren, dr->textTex[player], NULL, &dst);
+}
+
 void displayEnd(Game *g, Driver *dr) {
 	int i;
 	SDL_Rect r = { 0, 0, dr->windowWidth, dr->windowHeight };
@@ -63,6 +75,8 @@ void displayEnd(Game *g, Driver *dr) {
 	for(i = TEX_RESTART; i < NeTEX; i++) {
 		SDL_RenderCopy(dr->ren, dr->eTex[i], NULL, &dr->eTexCoord[i]);
 	} 
+
+	displayWinner(g, dr);
 }
 
 void displayGame(Game *g, Driver *dr) {

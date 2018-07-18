@@ -16,9 +16,9 @@ void initGame(Game *g, Driver *dr);
 void callback(Game *g, Driver *dr);
 
 struct Player {
-	char* name;
 	int color;
 	int score;
+	char* name;
 };
 
 struct Game {
