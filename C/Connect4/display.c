@@ -66,13 +66,15 @@ void displayEnd(Game *g, Driver *dr) {
 	SDL_SetRenderDrawColor(dr->ren, 0, 0, 0, 100);
 	SDL_RenderFillRect(dr->ren, &r);
 
-	SDL_SetRenderDrawColor(dr->ren, 250, 250, 250, 255);
+	SDL_SetRenderDrawColor(dr->ren, 250, 250, 250, 150);
+
 	SDL_RenderFillRect(dr->ren, &dr->eTexCoord[TEX_SQUARE]);
 
-	SDL_SetRenderDrawColor(dr->ren, 0, 0, 0, 255);
+	SDL_SetRenderDrawColor(dr->ren, 0, 0, 0, 150);
 	SDL_RenderDrawRect(dr->ren, &dr->eTexCoord[TEX_NAME]);
 
 	for(i = TEX_RESTART; i < NeTEX; i++) {
+		SDL_SetTextureAlphaMod(dr->eTex[i], 150);
 		SDL_RenderCopy(dr->ren, dr->eTex[i], NULL, &dr->eTexCoord[i]);
 	} 
 
