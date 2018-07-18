@@ -49,6 +49,7 @@ void callback(Game* g, Driver* dr) {
 		clear(dr);
 		switch(g->state) {
 			case MENU:
+			case H_SCORE:
 				menu(g, dr);
 				displayMenu(g, dr);
 				break;
