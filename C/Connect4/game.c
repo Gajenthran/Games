@@ -6,7 +6,7 @@
 #include "player.h"
 
 static int _grid[ROWS * COLS];
-static Player _player[2];
+static Player _player[NPLAYER];
 static int _gameState = MENU;
 
 void initGame(Game *g, Driver *dr) {
@@ -15,6 +15,7 @@ void initGame(Game *g, Driver *dr) {
 	g->grid = _grid;
 	g->player = _player;
 	g->state = _gameState;
+	g->round = 0;
 
 	initSDL(dr, 640, 480);
 	initPlayer(g);
@@ -36,15 +37,16 @@ void menu(Game *g, Driver *dr) {
 
 void play(Game *g, Driver* dr) {
 	static int pId = 0;
-	if(putDisc(g, dr, g->player[pId].color))
+	if(putDisc(g, dr, pId)) {
 		pId = (pId + 1) % NPLAYER;
+		g->round++;
+	}
 	if(fullGrid(g)) g->state = END;
 	if(checkWinner(g)) g->state = END;
 }
 
 
 void callback(Game* g, Driver* dr) {
-	int i = 0;
 	while(!dr->in.quit){
 		clear(dr);
 		switch(g->state) {
@@ -55,7 +57,7 @@ void callback(Game* g, Driver* dr) {
 				break;
 			case GAME:
 				play(g, dr);
-				displayGrid(g, dr);
+				displayGame(g, dr);
 				break;
 			case END:
 				exit(0);

@@ -9,6 +9,8 @@ enum { DX = 6, DY = 4 };
 
 void displayMenu(Game *g, Driver *dr);
 void displayGrid(Game *g, Driver *dr);
+void displayPlayerRound(Game *g, Driver *dr);
+void displayGame(Game *g, Driver *dr);
 void clear(Driver *dr);
 void update(Driver *dr);
 

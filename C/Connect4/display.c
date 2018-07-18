@@ -17,7 +17,6 @@ void displayMenu(Game *g, Driver *dr) {
 	displayBackground(g, dr);
 	for(i = 1; i < NmTEX; i++) {
 		src.y = 0;
-		SDL_SetRenderDrawColor(dr->ren, 0, 255, 255, SDL_ALPHA_OPAQUE);
 		if(elementTargeted(dr, dr->mTexCoord[i].x, dr->mTexCoord[i].y, dr->mTexCoord[i].w + dr->mTexCoord[i].x, dr->mTexCoord[i].h + dr->mTexCoord[i].y) && i != 1)
 			src.y = src.h;
 		SDL_RenderCopy(dr->ren, dr->mTex[i], &src, &dr->mTexCoord[i]);
@@ -28,11 +27,27 @@ int displayHighlightColumn(Game *g, Driver *dr, int col) {
 	return (elementTargeted(dr, col, 0, col + SZ, dr->windowHeight));
 }
 
+void displayPlayerRound(Game *g, Driver *dr) {
+	int round = g->round % NPLAYER, r, c;
+	SDL_SetTextureAlphaMod(dr->gTex[TEX_DISCS], 255);
+	for(r = g->rows + DY - 2; r < g->rows + DY; r++) {
+		for(c = g->cols + DX + 2; c <  g->cols + DX + 4; c++) {
+			SDL_Rect dst = { .x = c * SZ, .y = r * SZ, .w = SZ, .h = SZ };
+			SDL_Rect src = { .x = g->player[round].color * (SZ * 2), .y = 0, .w = SZ, .h = SZ };
+			SDL_RenderCopy(dr->ren, dr->gTex[TEX_DISCS], &src, &dst);
+		}
+	}
+}
+
+void displayGame(Game *g, Driver *dr) {
+	displayBackground(g, dr);
+	displayPlayerRound(g, dr);
+	displayGrid(g, dr);
+}
+
 void displayGrid(Game *g, Driver *dr) {
 	int r, c;
 	unsigned int nbRows = dr->windowHeight/SZ, nbCols = dr->windowWidth/SZ;
-	displayBackground(g, dr);
-	
 	for(r = DY; r < g->rows + DY; r++) {
 		for(c = DX; c < g->cols + DX; c++) {
 			SDL_SetTextureAlphaMod(dr->gTex[TEX_DISCS], 150);
@@ -43,7 +58,7 @@ void displayGrid(Game *g, Driver *dr) {
 			SDL_RenderCopy(dr->ren, dr->gTex[TEX_DISCS], &src, &dst);
 		}
 	}
-} 
+}
 
 void clear(Driver *dr) {
 	SDL_SetRenderDrawColor(dr->ren, 255, 255, 255, SDL_ALPHA_OPAQUE);

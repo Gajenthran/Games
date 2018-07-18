@@ -1,7 +1,6 @@
 #ifndef PLAYER_H___
 #define PLAYER_H___
 
-#define NPLAYER 2
 #include "display.h"
 #include "grid.h"
 #include "game.h"
@@ -9,6 +8,6 @@
 
 void	initPlayer(Game *g);
 int 	chooseColumn(Game *g, Driver *dr);
-int 	putDisc(Game *g, Driver *dr, int color);
+int 	putDisc(Game *g, Driver *dr, int pId);
 
 #endif

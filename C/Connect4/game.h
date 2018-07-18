@@ -3,6 +3,7 @@
 
 #include "sdl_driver.h"
 
+#define NPLAYER 2
 #define ROWS 7
 #define COLS 8
 
@@ -15,15 +16,16 @@ void initGame(Game *g, Driver *dr);
 void callback(Game *g, Driver *dr);
 
 struct Player {
-	char* name;		
-	int color;	
+	char* name;
+	int color;
 	int score;
 };
 
 struct Game {
-	int rows;		
-	int cols;		
-	int *grid;	
+	int rows;
+	int cols;
+	int round;
+	int *grid;
 	Player *player;
 	int state;
 };

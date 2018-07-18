@@ -114,7 +114,7 @@ void updateEvents(Driver *dr) {
 			case SDL_KEYDOWN:
 				if(ev.key.keysym.sym == SDLK_LEFT) 
 					dr->in.key = -1;
-				else if(ev.key.keysym.sym == SDLK_LEFT)
+				else if(ev.key.keysym.sym == SDLK_RIGHT)
 					dr->in.key = 1;
 				break;
 			case SDL_MOUSEBUTTONDOWN:
