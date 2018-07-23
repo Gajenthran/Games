@@ -1,4 +1,4 @@
-/**
+/*!
  * \file main2.c
  * \brief Rally-X with Ncurses' driver
  * \author PANCHALINGAMOORTHY Gajenthran

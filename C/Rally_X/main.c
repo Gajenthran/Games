@@ -1,4 +1,4 @@
-/**
+/*!
  * \file main.c
  * \brief Rally-X with SDL's driver
  * \author PANCHALINGAMOORTHY Gajenthran

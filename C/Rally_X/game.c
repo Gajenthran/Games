@@ -5,12 +5,18 @@
 #include "game.h"
 #include "driver.h"
 
+/*! \brief data of the game */
 Game g;
+/*! \brief background of the game (dimension : H * W) */
 static unsigned char bg[H * W];
+/*! \brief entities (player and enemies) of the game */
 static Entity entity[NEntity];
+/*! \brief direction X */
 static int dirx[] = {0, -1, 1, 0, 0 };
+/*! \brief direction Y */
 static int diry[] = {0, 0, 0, -1, 1 };
 
+/*! \brief initialize data of the player. */
 static void init_player(void) {
     g.entity[Player].x = W/2;
     g.entity[Player].y = H/2;
@@ -21,6 +27,7 @@ static void init_player(void) {
     g.entity[Player].coeff = g.entity[Player].bonus = 1;
 }
 
+/*! \brief initialize data of the enemies. */
 static void init_enemy(void) {
     int ent_id;
     for(ent_id = Random; ent_id < NEntity; ent_id++) {
@@ -33,6 +40,7 @@ static void init_enemy(void) {
     }
 }
 
+/*! \brief load the current level */
 static char * load_level(void) {
     FILE * file = NULL;
     char *lbg = malloc(H * W * sizeof *lbg);
@@ -47,6 +55,8 @@ static char * load_level(void) {
     return lbg;
 }
 
+/*! \brief move to the next level, by updating the data of the player 
+ * and loading the new level. */
 static void next_level(void) {
 	int i;
 
@@ -59,6 +69,7 @@ static void next_level(void) {
     init_enemy();
 }
 
+/*! \brief count the number of checkpoints */
 static int count_checkpoint(void) {
     int count = 0;
     for(int i = 0; i < H * W; ++i)
@@ -67,6 +78,8 @@ static int count_checkpoint(void) {
     return count;
 }
 
+/*! \brief update the data of the player, the data of the enemies and 
+ * the background when the player loses. */
 static void player_loses(void) {
     int i;
     init_player();
@@ -77,21 +90,25 @@ static void player_loses(void) {
             g.background[i] = Road;
 }
 
+/*! \brief call the function next_level when there is no checkpoint. */  
 static void is_win(void) {
     if(count_checkpoint() == 0)
         next_level();
 }
 
+/*! \brief calculate the distance between the player and an enemy. */
 static int distance(int x_player, int y_player, int x_enemy, int y_enemy) {
     int x = x_player - x_enemy;
     int y = y_player - y_enemy;
     return(x * x) +(y * y);
 }
 
+/*! \brief return a random number beetwen 0 and N. */
 static int get_random_move(int n) {
     return(int)(n *(rand()/(RAND_MAX + 1.0)));
 }
 
+/*! \brief count the number of objects. */
 static int count_object(int typecell) {
     int count = 0, i;
     for(i = 0; i < H * W; i++) {
@@ -101,6 +118,8 @@ static int count_object(int typecell) {
     return count;
 }
 
+/*! \brief evaluate the quantity of fuel. If it's negative, the player will
+ * move slowly. */
 static void eval_fuel(void) {
     if(entity[Player].fuel <= 0)
         entity[Player].standstill = On;

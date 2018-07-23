@@ -3,6 +3,7 @@
 #include <string.h>
 #include "player.h"
 
+/*! \brief initialize data of the player. */
 void initPlayer(Game *g) {
 	int pId;
 	for(pId = 0; pId < NPLAYER; pId++) {
@@ -12,6 +13,7 @@ void initPlayer(Game *g) {
 	}
 }
 
+/*! \brief return the column clicked by the user. Otherwise return -1. */
 int chooseColumn(Game *g, Driver *dr) {
 	int r, c;
 	for(r = DY; r < g->rows + DY; r++) {
@@ -26,6 +28,7 @@ int chooseColumn(Game *g, Driver *dr) {
 	return -1;
 }
 
+/*! \brief put the token of the current player by verifying if it's possible. */
 int putDisc(Game *g, Driver *dr, int pId) {
 	int r, c, col, row;
 	unsigned int nbRows = dr->windowHeight/SZ, nbCols = dr->windowWidth/SZ;
