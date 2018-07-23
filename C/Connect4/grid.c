@@ -2,25 +2,30 @@
 #include <stdlib.h>
 #include "grid.h"
 
+/*! \brief initialize the grid, i.e. all the cells are EMPTY. */
 void initGrid(Game *g) {
-	int pos;
-	for(pos = 0; pos < g->rows * g->cols; pos++)
-		g->grid[pos] = EMPTY;
+	int i;
+	for(i = 0; i < g->rows * g->cols; i++)
+		g->grid[i] = EMPTY;
 }
 
+/*! \brief check if all the cells are filled. */
 int fullGrid(Game *g) {
-	int pos;
-	for(pos = 0; pos < g->rows * g->cols; pos++)
-		if(g->grid[pos] == EMPTY)
+	int i;
+	for(i = 0; i < g->rows * g->cols; i++)
+		if(g->grid[i] == EMPTY)
 			return 0;
 	return 1;
 }
 
+/*! \brief check if the coordonate in parameter are valid. */
 int validPosition(Game *g, int x, int y) {
 	return (y >= 0 && y < g->rows &&
 			x >= 0 && x < g->cols);
 }
 
+/*! \brief check if there is a correct alignment, i.e. there is a horizontal,
+ * vertical or diagonal series (NCOUNT) of same color tokens. */
 int checkAlignment(Game *g, int color, int x, int y, int dx, int dy) {
 	int i, count = 0;
 	while(validPosition(g, x, y)) {
@@ -38,6 +43,7 @@ int checkAlignment(Game *g, int color, int x, int y, int dx, int dy) {
 	return 0;
 }
 
+/*! \brief check if there is a winner using the function checkAlignment. */
 int checkWinner(Game *g) {
 	const int dirx[] = {-1,  0, 1, 0};
 	const int diry[] = { 0, -1, 0, 1};

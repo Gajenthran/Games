@@ -5,10 +5,15 @@
 #include "display.h"
 #include "player.h"
 
+/*! \brief game grid (size : ROWS * COLS) */
 static int _grid[ROWS * COLS];
+/*! \brief all the player in the game (= 2)*/
 static Player _player[NPLAYER];
+/*! \brief the actual state of the game : menu, playing or end of the game */
 static int _gameState = MENU;
 
+/*! \brief initialize the game, ie. initialize the SDL's parameters 
+ * the players and the grid. Morever, call the function callback. */
 void initGame(Game *g, Driver *dr) {
 	g->rows = ROWS;
 	g->cols = COLS;
@@ -23,7 +28,7 @@ void initGame(Game *g, Driver *dr) {
 	callback(g, dr);
 }
 
-
+/*! \brief the interface of the menu  with 3 options : play, scoreboard and quit. */
 void menu(Game *g, Driver *dr) {
 	int i;
 	for(i = TEX_PLAY; i < NmTEX; i++) {
@@ -35,6 +40,8 @@ void menu(Game *g, Driver *dr) {
 	}
 }
 
+/*! \brief the interface of the game with the display of the grid and the current
+ * player to play. Call the function putDisc, fullGrid and checkWinner. */
 void play(Game *g, Driver* dr) {
 	static int pId = 0;
 	if(checkWinner(g)) { g->player[pId].won = 1; g->state = END; }
@@ -45,6 +52,8 @@ void play(Game *g, Driver* dr) {
 	}
 }
 
+/*! \brief the interface of the end of the game with 2 option. Restart the game 
+ * or quit the game. */
 void end(Game *g, Driver *dr) {
 	int i;
 	if(elementClicked(dr, dr->eTexCoord[TEX_RESTART].x, 
@@ -63,6 +72,7 @@ void end(Game *g, Driver *dr) {
 		dr->in.quit = 1;
 }
 
+/*! \brief the principal function which updates events, the displays of the elements */
 void callback(Game* g, Driver* dr) {
 	while(!dr->in.quit){
 		clear(dr);

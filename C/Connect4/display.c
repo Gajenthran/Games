@@ -1,5 +1,6 @@
 #include "display.h"
 
+/*! \brief display the background of the game. */
 void displayBackground(Game* g, Driver* dr) {
 	int r, c;
 	unsigned int nbRows = dr->windowHeight/SZ, nbCols = dr->windowWidth/SZ;
@@ -11,6 +12,7 @@ void displayBackground(Game* g, Driver* dr) {
 	}
 }
 
+/*! \brief display the name of the current player */
 void displayPlayerName(Game *g, Driver *dr) {
 	int round = g->round % NPLAYER, r, c;
 	SDL_SetTextureAlphaMod(dr->gTex[TEX_DISCS], 255);
@@ -19,6 +21,8 @@ void displayPlayerName(Game *g, Driver *dr) {
 	SDL_RenderCopy(dr->ren, dr->textTex[round], NULL, &dst);
 }
 
+/*! \brief display the menu screen, i.e. the title of the game and the 
+ * different option of the menu. */
 void displayMenu(Game *g, Driver *dr) {
 	int i;
 	SDL_Rect src = { .x = 0, .y = 0, .w = 1059, .h = 344 };
@@ -31,10 +35,12 @@ void displayMenu(Game *g, Driver *dr) {
 	}
 }
 
+/*! \brief highlight the column of the grid where the cursor is present. */
 int displayHighlightColumn(Game *g, Driver *dr, int col) {
 	return (elementTargeted(dr, col, 0, col + SZ, dr->windowHeight));
 }
 
+/*! \brief display the color of the current player. */
 void displayPlayerRound(Game *g, Driver *dr) {
 	int round = g->round % NPLAYER, r, c;
 	SDL_SetTextureAlphaMod(dr->gTex[TEX_DISCS], 255);
@@ -47,6 +53,7 @@ void displayPlayerRound(Game *g, Driver *dr) {
 	}
 }
 
+/*! \brief display the name of the winner. */
 void displayWinner(Game *g, Driver *dr) {
 	int i;
 	SDL_Rect dst = { 
@@ -65,6 +72,7 @@ void displayWinner(Game *g, Driver *dr) {
 	SDL_RenderCopy(dr->ren, dr->textTex[TEXT_DRAW], NULL, &dst);
 }
 
+/*! \brief display the end of the game screen. */
 void displayEnd(Game *g, Driver *dr) {
 	int i;
 	SDL_Rect r = { 0, 0, dr->windowWidth, dr->windowHeight };
@@ -87,6 +95,8 @@ void displayEnd(Game *g, Driver *dr) {
 	displayWinner(g, dr);
 }
 
+/*! \brief display the game screen, i.e display the background, the name of 
+ * the current player, the color of the current player and the grid. */
 void displayGame(Game *g, Driver *dr) {
 	displayBackground(g, dr);
 	displayPlayerRound(g, dr);
@@ -94,6 +104,7 @@ void displayGame(Game *g, Driver *dr) {
 	displayGrid(g, dr);
 }
 
+/*! \brief display the grid of the game. */
 void displayGrid(Game *g, Driver *dr) {
 	int r, c;
 	unsigned int nbRows = dr->windowHeight/SZ, nbCols = dr->windowWidth/SZ;
@@ -109,11 +120,13 @@ void displayGrid(Game *g, Driver *dr) {
 	}
 }
 
+/*! \brief clear the screen. */
 void clear(Driver *dr) {
 	SDL_SetRenderDrawColor(dr->ren, 255, 255, 255, SDL_ALPHA_OPAQUE);
 	SDL_RenderClear(dr->ren);
 }
 
+/*! \brief update the screen. */
 void update(Driver *dr) {
 	SDL_RenderPresent(dr->ren);
 }

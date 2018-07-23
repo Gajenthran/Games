@@ -6,14 +6,13 @@
 #include <SDL_ttf.h>
 
 #define SZ 32
-enum { DX = 6, DY = 4 };
 
+enum { DX = 6, DY = 4 };
 enum options { TITLE, PLAY, HIGH_SCORE, QUIT, NOPTION };
 enum texts { TEXT_P1, TEXT_P2, TEXT_DRAW, NTEXT };
 enum gameTextures { TEX_GBG, TEX_GRID, TEX_DISCS, NgTEX };
 enum menuTextures { TEX_MBG, TEX_TITLE, TEX_PLAY, TEX_HIGHSCORE, TEX_QUIT, NmTEX };
 enum endTextures { TEX_SQUARE, TEX_NAME, TEX_RESTART, TEX_END, NeTEX };
-
 
 typedef struct Driver Driver;
 typedef struct Input Input;
@@ -40,14 +39,14 @@ struct Driver {
 };
 
 
-int initSDL(Driver* driver, int windowWidth, int windowHeight);
-void updateEvents(Driver *dr);
-static int loadmFiles(Driver *driver);
-static int loadgFiles(Driver *driver);
-static int loadeFiles(Driver *driver);
+int 		initSDL(Driver* driver, int windowWidth, int windowHeight);
+void 		updateEvents(Driver *dr);
+static int 	loadmFiles(Driver *driver);
+static int 	loadgFiles(Driver *driver);
+static int 	loadeFiles(Driver *driver);
 static void initTexCoord(Driver *dr);
-static int loadTexts(Driver *dr);
-extern int elementTargeted(Driver *dr, int x0, int y0, int x1, int y1);
-extern int elementClicked(Driver *dr, int x0, int y0, int x1, int y1);
+static int 	loadTexts(Driver *dr);
+extern int 	elementTargeted(Driver *dr, int x0, int y0, int x1, int y1);
+extern int 	elementClicked(Driver *dr, int x0, int y0, int x1, int y1);
 
 #endif

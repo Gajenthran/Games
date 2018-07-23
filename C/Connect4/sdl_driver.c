@@ -1,5 +1,6 @@
 #include "sdl_driver.h"
 
+/*! \brief all the files about the menu. */
 static char* menuFiles[NmTEX] = {
 	"files/background.png",
 	"files/title.png",
@@ -8,12 +9,14 @@ static char* menuFiles[NmTEX] = {
 	"files/quit.png"
 };
 
+/*! \brief all the files about the game. */
 static char* gameFiles[NgTEX] = {
 	"files/background.png",
 	"files/grid.png",
 	"files/discs.png"
 };
 
+/*! \brief all the files about the end of the game. */
 static char* endFiles[NeTEX] = {
 	"files/background.png",
 	"files/grid.png",
@@ -21,12 +24,14 @@ static char* endFiles[NeTEX] = {
 	"files/end.png"
 };
 
+/*! \brief all the texts in the game. */
 static const char* texts[NTEXT] = {
     "player 1 ",
     "player 2 ",
     "draw"
 };
 
+/*! \brief initialize all the SDL settings. */
 int initSDL(Driver* driver, int windowWidth, int windowHeight) {
 	int i;
 	driver->windowWidth = windowWidth;
@@ -65,6 +70,7 @@ int initSDL(Driver* driver, int windowWidth, int windowHeight) {
 	return 0;
 }
 
+/*! \brief load all the texts, i.e. transform all the texts into textures. */
 static int loadTexts(Driver *dr) {
 	int i;
 	SDL_Color black = { 0, 0, 0, 255 };
@@ -85,6 +91,7 @@ static int loadTexts(Driver *dr) {
 	return 0;
 }
 
+/*! \brief load all the menu files, i.e. transform all the menu files into textures. */
 static int loadmFiles(Driver *driver) {
 	int i;
 	SDL_Surface *png;
@@ -104,6 +111,7 @@ static int loadmFiles(Driver *driver) {
 	return 0;
 }
 
+/*! \brief load all the game files, i.e. transform all the game files into textures. */
 static int loadgFiles(Driver *driver) {
 	int i;
 	SDL_Surface *png;
@@ -124,6 +132,8 @@ static int loadgFiles(Driver *driver) {
 }
 
 
+/*! \brief load all the end of the game files, i.e. transform all the end of the game 
+ * files into textures. */
 static int loadeFiles(Driver *driver) {
 	int i;
 	SDL_Surface *png;
@@ -144,6 +154,7 @@ static int loadeFiles(Driver *driver) {
 	return 0;
 }
 
+/*! \brief initialize the coordinates of all textures. */
 static void initTexCoord(Driver *dr) {
 	int SZw = 270, SZh = 30, i;
 
@@ -176,6 +187,7 @@ static void initTexCoord(Driver *dr) {
 	dr->eTexCoord[TEX_END].h = dr->eTexCoord[TEX_RESTART].h; 
 }
 
+/*! \brief update mouse events and keyboard events */
 void updateEvents(Driver *dr) {
 	SDL_Event ev;
 	srand((unsigned int)time(NULL));
@@ -211,10 +223,14 @@ void updateEvents(Driver *dr) {
 	}
 }
 
+/*! \brief check if the mouse cursor is in the rectangle (coordinates are passed in 
+ * parameter) */
 int elementTargeted(Driver *dr, int x0, int y0, int x1, int y1) {
 	return (dr->in.mmx > x0 && dr->in.mmy > y0 && dr->in.mmx < x1 && dr->in.mmy < y1);
 }
 
+/*! \brief check if the user clicks in the rectangle (coordinates are passed in 
+ * parameter) */
 int elementClicked(Driver *dr, int x0, int y0, int x1, int y1) {
 	if(dr->in.mbx > x0 && dr->in.mby > y0 && dr->in.mbx < x1 && dr->in.mby < y1) {
 		dr->in.mbx = dr->in.mby = 0;
