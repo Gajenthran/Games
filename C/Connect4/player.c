@@ -8,6 +8,7 @@ void initPlayer(Game *g) {
 	for(pId = 0; pId < NPLAYER; pId++) {
 		g->player[pId].color = pId+1;
 		g->player[pId].score = 0;
+		g->player[pId].won = 0;
 	}
 }
 

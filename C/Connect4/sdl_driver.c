@@ -23,7 +23,8 @@ static char* endFiles[NeTEX] = {
 
 static const char* texts[NTEXT] = {
     "player 1 ",
-    "player 2 "
+    "player 2 ",
+    "draw"
 };
 
 int initSDL(Driver* driver, int windowWidth, int windowHeight) {

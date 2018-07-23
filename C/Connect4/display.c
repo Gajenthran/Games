@@ -48,6 +48,7 @@ void displayPlayerRound(Game *g, Driver *dr) {
 }
 
 void displayWinner(Game *g, Driver *dr) {
+	int i;
 	SDL_Rect dst = { 
 		.x = dr->eTexCoord[TEX_NAME].x + 5, 
 		.y = dr->eTexCoord[TEX_NAME].y + 5,
@@ -55,8 +56,13 @@ void displayWinner(Game *g, Driver *dr) {
 		.h = SZ * 3
 	};
 
-	int player = (g->round + 1) % NPLAYER;
-	SDL_RenderCopy(dr->ren, dr->textTex[player], NULL, &dst);
+	for(i = 0; i < NPLAYER; i++) {
+		if(g->player[i].won) {
+			SDL_RenderCopy(dr->ren, dr->textTex[i], NULL, &dst);
+			return;
+		}
+	}
+	SDL_RenderCopy(dr->ren, dr->textTex[TEXT_DRAW], NULL, &dst);
 }
 
 void displayEnd(Game *g, Driver *dr) {

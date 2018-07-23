@@ -9,7 +9,7 @@
 enum { DX = 6, DY = 4 };
 
 enum options { TITLE, PLAY, HIGH_SCORE, QUIT, NOPTION };
-enum texts { TEXT_P1, TEXT_P2, NTEXT };
+enum texts { TEXT_P1, TEXT_P2, TEXT_DRAW, NTEXT };
 enum gameTextures { TEX_GBG, TEX_GRID, TEX_DISCS, NgTEX };
 enum menuTextures { TEX_MBG, TEX_TITLE, TEX_PLAY, TEX_HIGHSCORE, TEX_QUIT, NmTEX };
 enum endTextures { TEX_SQUARE, TEX_NAME, TEX_RESTART, TEX_END, NeTEX };
