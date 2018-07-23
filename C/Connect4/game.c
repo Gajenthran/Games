@@ -44,9 +44,9 @@ void menu(Game *g, Driver *dr) {
  * player to play. Call the function putDisc, fullGrid and checkWinner. */
 void play(Game *g, Driver* dr) {
 	static int pId = 0;
-	if(checkWinner(g)) { g->player[pId].won = 1; g->state = END; }
-	if(fullGrid(g)) g->state = END;
 	if(putDisc(g, dr, pId)) {
+		if(checkWinner(g)) { g->player[pId].won = 1; g->state = END; }
+		if(fullGrid(g)) g->state = END;
 		pId = (pId + 1) % NPLAYER;
 		g->round++;
 	}

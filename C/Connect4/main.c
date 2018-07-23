@@ -1,4 +1,4 @@
-/**
+/*!
  * \file main.c
  * \brief Connect 4
  * \author PANCHALINGAMOORTHY Gajenthran
