@@ -13,7 +13,7 @@ static Player _player[NPLAYER];
 static int _gameState = MENU;
 
 /*! \brief initialize the game, ie. initialize the SDL's parameters 
- * the players and the grid. Morever, call the function callback. */
+ * the player's data and the grid. Morever, call the function callback. */
 void initGame(Game *g, Driver *dr) {
 	g->rows = ROWS;
 	g->cols = COLS;

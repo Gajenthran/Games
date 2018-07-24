@@ -3,7 +3,7 @@
 #include <string.h>
 #include "player.h"
 
-/*! \brief initialize data of the player. */
+/*! \brief initialize player's data. */
 void initPlayer(Game *g) {
 	int pId;
 	for(pId = 0; pId < NPLAYER; pId++) {
