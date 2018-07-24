@@ -4,15 +4,16 @@
 #include <ncurses.h>
 #include <stdlib.h>
 
-static int init(const Game* game);
-static void start(void(*callback)(void*));
-static int get_move(void);
-static void draw_bg(void);
-static void draw_entity(int ent_id);
-static void update(void);
-static void lose_game(void);
-static void quit_game(void);
+static int      init(const Game* game);
+static void     start(void(*callback)(void*));
+static int      get_move(void);
+static void     draw_bg(void);
+static void     draw_entity(int ent_id);
+static void     update(void);
+static void     lose_game(void);
+static void     quit_game(void);
 
+/*! \brief elements of the ncurses driver */
 Driver ncurses_driver = {
     .game = NULL,
     .init = init,
@@ -28,7 +29,9 @@ Driver ncurses_driver = {
 
 #define GAME (ncurses_driver.game)
 
+/*! \brief all the symbols of the tiles. */
 static char tiles[NCell] = {' ', '.', '#', '+', '!', '%','O', 'Y'};
+/*! \brief all the symbols of the sprites. */
 static const char* sprites[NEntity] = {
     "ooo@<<<@>>>@^^^@vvv@", 
     "ooo@<<<@>>>@^^^@vvv@", 
@@ -38,6 +41,7 @@ static const char* sprites[NEntity] = {
 
 enum { FPS = 15 };
 
+/*! \brief initialize all the Ncurses settings. */
 static int init(const Game* game) {
     GAME = game;
     initscr();
@@ -47,6 +51,7 @@ static int init(const Game* game) {
     return 0;
 }
 
+/*! \brief Call the function callback. */
 static void start(void(*callback)(void*)) {
     for(;;) {
         callback(&ncurses_driver);
@@ -54,6 +59,7 @@ static void start(void(*callback)(void*)) {
     }
 }
 
+/*! \brief update keyboard events and return the player's next move. */
 static int get_move(void) {
     int car = getch();
     static int last_move = Nothing;
@@ -87,6 +93,7 @@ static int get_move(void) {
     return last_move;
 }
 
+/*! \brief return the highest score since the creation of the game. */
 static int high_score(void) {
     static int score = -1;
 
@@ -144,6 +151,7 @@ static int high_score(void) {
     mvprintw(GAME->screen_h + 6, 0, "SMOKE : k(azerty)", NULL);
 } */
 
+/*! \brief display the background of the game. */
 static void draw_bg(void) {
 
     int y, x, typecell, l, c;
@@ -178,6 +186,7 @@ static void draw_bg(void) {
     //show_data();
 }
 
+/*! \brief display all the entities (player and enemies) of the game. */
 static void draw_entity(int ent_id) {
 
     int x0,y0;
@@ -211,7 +220,7 @@ static void draw_entity(int ent_id) {
     anim =(anim + 1) % 4;
 }
 
-
+/*! \brief display a message that shows the end of the game. */
 static void lose_game(void) {
     int move_x =(GAME->entity[0].x - GAME->screen_w / 2);
     int move_y =(GAME->entity[0].y - GAME->screen_h / 2);
@@ -222,10 +231,14 @@ static void lose_game(void) {
     usleep(530000);
 
 }
+
+/*! \brief quit the game. */
 static void quit_game(void) {
     endwin();
     exit(0);
 }
+
+/*! \brief update the screen. */
 static void update(void) {
     refresh();
 }
