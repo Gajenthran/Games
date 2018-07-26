@@ -7,13 +7,14 @@
 
 var _dinosaur;
 var _cactus = [];
-var _cactusDelay;
+var _cactusTime = [75, 150];
+var _delay;
 
 function setup() {
 	createCanvas(640, 480);
 	_dinosaur = new Entity();
 	_cactus.push(new Obstacle(_dinosaur.pos.x + width, _dinosaur.pos.y));
-	// _cactusDelay = random(75, 120);
+	_delay = _cactusTime[0];
 }
 
 function draw() {
@@ -23,12 +24,13 @@ function draw() {
 
 	_dinosaur.applyForce(gravity);
 
-  for(var i = _cactus.length-1; i >= 0; i--) {
+	for(var i = _cactus.length-1; i >= 0; i--) {
 		_cactus[i].show();
 		_cactus[i].update(_dinosaur);
 
 		if(_cactus[i].offscreen()) {
 			_cactus.splice(i, 1);
+			_delay = _cactusTime[Math.floor(random(0, _cactusTime.length))];
 		}
 	} 
 
@@ -36,11 +38,11 @@ function draw() {
 	_dinosaur.show();
 
 	/* To see if the dinosaur touch an obstacle */ 
-	print(_dinosaur.alive)
+		print(_dinosaur.alive)
 
-  if(frameCount % 90 == 0) {
-    _cactus.push(new Obstacle(_dinosaur.pos.x + width, _dinosaur.pos.y));
-	}
+	print(frameCount + " % " + _delay);
+	if(frameCount % _delay == 0) 
+		_cactus.push(new Obstacle(_dinosaur.pos.x + width, _dinosaur.pos.y));
 }
 
 function keyPressed() {
