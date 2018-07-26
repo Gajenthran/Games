@@ -1,3 +1,4 @@
+/*! \brief All the obstacles of the game like Cactus */
 function Obstacle(x, y) {
   this.top = 10;
   this.bottom = 50;
@@ -5,14 +6,11 @@ function Obstacle(x, y) {
   this.w = 80;
   this.speed = 5; 
 
-  this.touch = function(dinosaur) {
+  this.update = function(dinosaur) {
+    this.x -= this.speed;
     if (dinosaur.pos.y < this.top || dinosaur.pos.y > height - this.bottom)
       if (dinosaur.pos.x > this.x && dinosaur.pos.x < this.x + this.w)
       	dinosaur.alive = false;
-  }
-
-  this.update = function() {
-    this.x -= this.speed;
   }
 
   this.offscreen = function() {

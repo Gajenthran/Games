@@ -1,3 +1,10 @@
+/*!
+ * \file sketch.js
+ * \brief G's Dinosaur
+ * \author PANCHALINGAMOORTHY Gajenthran
+ * \date 26 July 2018
+ */
+
 var _dinosaur;
 var _cactus = [];
 var _cactusDelay;
@@ -18,8 +25,7 @@ function draw() {
 
   for(var i = _cactus.length-1; i >= 0; i--) {
 		_cactus[i].show();
-		_cactus[i].update();
-		_cactus[i].touch(_dinosaur);
+		_cactus[i].update(_dinosaur);
 
 		if(_cactus[i].offscreen()) {
 			_cactus.splice(i, 1);
