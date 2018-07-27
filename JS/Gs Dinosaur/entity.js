@@ -10,24 +10,43 @@ function Entity() {
 	this.sx = this.sy = 0;
 	this.sWidth = 42; this.sHeight = 45;
 
+	this.score = 0;
 	this.anim = Animation.RUN0;
 	this.alive = true;
+	this.invicible = true;
 	this.canJump = 1;
 
+	this.init = function() {
+		this.pos = createVector(50, height);
+		this.vel = createVector(1, 0);
+		this.acc = createVector(0, 0);
+		this.score = 0;
+		this.anim = Animation.RUN0;
+		this.alive = true;
+		this.canJump = 1;
+		this.invicible = true;
+	}
 	this.applyForce = function(force) {
 		this.acc.add(force);
 	} 
 
 	this.update = function() {
+		if(!this.alive) {
+			//if(this.pos.y < height + this.dHeight) this.pos.y--;
+			return false;
+		}
+
 		this.vel.add(this.acc);
 		this.pos.add(this.vel);
 		this.acc.set(0, 0); 
+		this.score++;
 
 		if(this.pos.y > height) {
 			this.pos.y = height;
 			this.vel.y = 0;
 			this.canJump = 1;
 		}
+		return true;
 	}
 
 	this.show = function() {

@@ -7,14 +7,16 @@
 
 var _dinosaur;
 var _cactus = [];
-var _imgDinosaur;
-var _imgCactus;
 var _cactusTime = [75, 150];
 var _delay;
+var _imgDinosaur;
+var _imgCactus;
+var _font;
 
 function preload() {
   _imgDinosaur = loadImage("files/dinosaur.png");
   _imgCactus = loadImage("files/cactus.png");
+ 	_font = loadFont("files/PressStart2P.ttf");
 }
 
 function setup() {
@@ -23,13 +25,14 @@ function setup() {
 	_cactus.push(new Obstacle(idObstacle.SMALL, _dinosaur.pos.x + width, _dinosaur.pos.y));
 	_cactus[_cactus.length-1].init();
 	_delay = _cactusTime[0];
+	textFont(_font);
+
 }
 
 function draw() {
 	background(247);
 	var gravity = createVector(0, 0.3);
 	translate(-_dinosaur.pos.x + 50, 0);
-
 	_dinosaur.applyForce(gravity);
 
 	for(var i = _cactus.length-1; i >= 0; i--) {
@@ -42,11 +45,12 @@ function draw() {
 		}
 	}
 
+	if(!_dinosaur.alive)
+		gameOver();
+
 	_dinosaur.update();
 	_dinosaur.show();
-
-	/* To see if the dinosaur touch an obstacle */ 
-	print(_dinosaur.alive)
+	showScore();
 
 	if(frameCount % _delay == 0) {
 		_cactus.push(new Obstacle(Math.floor(random(0, idObstacle.NOBS)), _dinosaur.pos.x + width, _dinosaur.pos.y));
@@ -55,12 +59,24 @@ function draw() {
 
 }
 
+function gameOver() {
+	_dinosaur.invicible = true;
+	textSize(30);
+	text(" GAME OVER ", _dinosaur.pos.x + 100, 200);
+}
+
+function showScore() {
+	textSize(10);
+	text(_dinosaur.score, _dinosaur.pos.x + (width - 150), 50);
+}
+
 function keyPressed() {
 	if(key == ' ') {
 		if(_dinosaur.canJump) {
 			var jump = createVector(0, -10.5);
 			_dinosaur.applyForce(jump);
 			_dinosaur.canJump = 0;
+			_dinosaur.invicible = false;
 		}
 	}
 }

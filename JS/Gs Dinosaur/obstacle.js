@@ -35,7 +35,8 @@ function Obstacle(id, x, y) {
 		this.pos.x -= this.speed;
 		if( (dinosaur.pos.y > height - this.dHeight) &&
 				(dinosaur.pos.x + dinosaur.dWidth > this.pos.x && 
-				 dinosaur.pos.x < this.pos.x + this.dWidth) )
+				 dinosaur.pos.x < this.pos.x + this.dWidth) &&
+				(!dinosaur.invicible))
 				dinosaur.alive = false;
 	}
 
