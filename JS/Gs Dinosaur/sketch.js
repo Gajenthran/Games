@@ -7,13 +7,21 @@
 
 var _dinosaur;
 var _cactus = [];
+var _imgDinosaur;
+var _imgCactus;
 var _cactusTime = [75, 150];
 var _delay;
+
+function preload() {
+  _imgDinosaur = loadImage("files/dinosaur.png");
+  _imgCactus = loadImage("files/cactus.png");
+}
 
 function setup() {
 	createCanvas(640, 480);
 	_dinosaur = new Entity();
-	_cactus.push(new Obstacle(_dinosaur.pos.x + width, _dinosaur.pos.y));
+	_cactus.push(new Obstacle(idObstacle.SMALL, _dinosaur.pos.x + width, _dinosaur.pos.y));
+	_cactus[_cactus.length-1].init();
 	_delay = _cactusTime[0];
 }
 
@@ -33,22 +41,23 @@ function draw() {
 			_delay = _cactusTime[Math.floor(random(0, _cactusTime.length))];
 		}
 	}
+
 	_dinosaur.update();
 	_dinosaur.show();
 
 	/* To see if the dinosaur touch an obstacle */ 
 	print(_dinosaur.alive)
 
-	if(frameCount % _delay == 0) 
-		_cactus.push(new Obstacle(_dinosaur.pos.x + width, _dinosaur.pos.y));
+	if(frameCount % _delay == 0) {
+		_cactus.push(new Obstacle(Math.floor(random(0, idObstacle.NOBS)), _dinosaur.pos.x + width, _dinosaur.pos.y));
+		_cactus[_cactus.length-1].init();
+	}
 
 }
 
 function keyPressed() {
 	if(key == ' ') {
 		if(_dinosaur.canJump) {
-			fill(random(0, 255));
-			rect(300,100, 400, 100);
 			var jump = createVector(0, -10.5);
 			_dinosaur.applyForce(jump);
 			_dinosaur.canJump = 0;
