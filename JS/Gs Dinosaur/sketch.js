@@ -18,8 +18,8 @@ function setup() {
 }
 
 function draw() {
-	background(0);
-	var gravity = createVector(0, 0.1);
+	background(247);
+	var gravity = createVector(0, 0.3);
 	translate(-_dinosaur.pos.x + 50, 0);
 
 	_dinosaur.applyForce(gravity);
@@ -32,17 +32,16 @@ function draw() {
 			_cactus.splice(i, 1);
 			_delay = _cactusTime[Math.floor(random(0, _cactusTime.length))];
 		}
-	} 
-
+	}
 	_dinosaur.update();
 	_dinosaur.show();
 
 	/* To see if the dinosaur touch an obstacle */ 
-		print(_dinosaur.alive)
+	print(_dinosaur.alive)
 
-	print(frameCount + " % " + _delay);
 	if(frameCount % _delay == 0) 
 		_cactus.push(new Obstacle(_dinosaur.pos.x + width, _dinosaur.pos.y));
+
 }
 
 function keyPressed() {
@@ -50,7 +49,7 @@ function keyPressed() {
 		if(_dinosaur.canJump) {
 			fill(random(0, 255));
 			rect(300,100, 400, 100);
-			var jump = createVector(0, -3.5);
+			var jump = createVector(0, -10.5);
 			_dinosaur.applyForce(jump);
 			_dinosaur.canJump = 0;
 		}
