@@ -1,3 +1,4 @@
+/*! \brief elements of the background. */
 var idBg = { 
 	ROAD:0, RESTART:1, NTILES:2
 };
@@ -48,7 +49,7 @@ function Background(id) {
 	this.show = function(dinosaur) {
 		if(this.id == idBg.RESTART && dinosaur.alive)
 			return false;
-		image(_imgBg, 
+		image(_img, 
 			this.x, this.y - this.dHeight, this.dWidth, this.dHeight, 
 			this.sx, this.sy, this.sWidth, this.sHeight); 
 		return true;

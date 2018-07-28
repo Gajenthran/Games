@@ -1,3 +1,4 @@
+/*! \brief obstacles of the game. */
 var idObstacle = { 
 	CACTUS01:0, CACTUS02:1, CACTUS03:2, NCACTUS:3
 };
@@ -22,7 +23,7 @@ function Obstacle(id, x, y) {
 				break;
 			case idObstacle.CACTUS03:
 				this.sx = 50;
-				this.sWidth = 23; this.sHeight = 48;
+				this.sWidth = 24; this.sHeight = 48;
 				this.dHeight = this.sHeight*2; this.dWidth = this.sWidth*2;
 				break;
 		}
@@ -31,7 +32,6 @@ function Obstacle(id, x, y) {
 	this.update = function(dinosaur) {
 		this.pos.x -= this.speed;
 		// if(!dinosaur.alive) this.pos.x += this.speed;
-
 		if(	(dinosaur.pos.y > height - this.dHeight) &&
 				(dinosaur.pos.x + dinosaur.dWidth > this.pos.x && 
 				 dinosaur.pos.x < this.pos.x + this.dWidth) )
@@ -45,7 +45,7 @@ function Obstacle(id, x, y) {
 	}
 
 	this.show = function() {
-		image(_imgBg, 
+		image(_img, 
 			this.pos.x, this.pos.y - this.dHeight, this.dWidth, this.dHeight, 
 			this.sx, this.sy, this.sWidth, this.sHeight); 
 	}

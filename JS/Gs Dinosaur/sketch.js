@@ -5,30 +5,36 @@
  * \date 26 July 2018
  */
 
+/*! \brief the entity controlled by the user. */
 var _dinosaur;
+/*! \brief the obstacles. the dinosaur has to jump over that. */
 var _cactus = [];
-var _bg = [2];
+/*! \brief the elements of the background. */
+var _bg = [];
+/*! \brief differents time of respawn (cactus). */
 var _cactusTime = [75, 150];
+/*! \brief the actual time of the respawn. */
 var _delay;
-var _imgBg;
+/*! \brief All the images of the game. Entites, background and obstacles */
+var _img;
+/*! \brief font of the game. */
 var _font;
 
 function preload() {
-  _imgBg = loadImage("files/background.png");
+  _img = loadImage("files/background.png");
  	_font = loadFont("files/PressStart2P.ttf");
 }
 
 function setup() {
 	createCanvas(640, 480);
 	_dinosaur = new Entity();
-	_dinosaur.init();
 	_cactus.push(new Obstacle(
 		idObstacle.CACTUS01, 
 		_dinosaur.pos.x + width, 
 		height));
 	_cactus[_cactus.length-1].init();
 	for(var i = 0; i < idBg.NTILES; i++) {
-		_bg[i] = new Background(i);
+		_bg.push(new Background(i));
 		_bg[i].init();
 	}
 	_delay = _cactusTime[0];	textFont(_font);

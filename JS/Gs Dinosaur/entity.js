@@ -1,8 +1,9 @@
+/*! \brief entity's movements/animations. */
 var Animation = { 
 	RUN0:0, RUN1:1, RUN2:2, NRUN:3, DEAD:3, INV:4, NANIM:5
 };
 
-/*! \brief All the entities on the game. There is only one : the dinosaur */
+/*! \brief All the entities on the game. There is only one : the dinosaur. */
 function Entity() {
 	this.pos = createVector(50, height);
 	this.vel = createVector(1, 0);
@@ -16,16 +17,6 @@ function Entity() {
 	this.anim = Animation.RUN0;
 	this.alive = true;
 	this.canJump = 1;
-
-	this.init = function() {
-		this.pos = createVector(50, height);
-		this.vel = createVector(1, 0);
-		this.acc = createVector(0, 0);
-		this.score = 0;
-		this.anim = Animation.RUN0;
-		this.alive = true;
-		this.canJump = 1;
-	}
 
 	this.applyForce = function(force) {
 		this.acc.add(force);
@@ -58,7 +49,7 @@ function Entity() {
 			this.anim = Animation.DEAD;
 
 		sx = this.anim * this.sWidth + this.sx;
-		image(_imgBg,
+		image(_img,
 			this.pos.x, this.pos.y - this.dWidth, this.dWidth, this.dHeight, 
 			sx, this.sy, this.sWidth, this.sHeight); 
 	}
