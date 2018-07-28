@@ -32,8 +32,8 @@ function Entity() {
 	} 
 
 	this.update = function() {
-		if(!this.alive)
-			return false;
+		/* if(!this.alive)
+			return false; */
 
 		this.vel.add(this.acc);
 		this.pos.add(this.vel);

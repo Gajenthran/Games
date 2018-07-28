@@ -7,8 +7,8 @@ function Obstacle(id, x, y) {
 	this.id = id;
 	this.pos = createVector(x, y);
 
-	this.sx = id; this.sy = 0;
-	this.sWidth = 17; this.sHeight = 35;
+	this.sx = 1; this.sy = 0;
+	this.sWidth = 16; this.sHeight = 35;
 	this.dWidth = this.sWidth*2; this.dHeight = this.sHeight*2;
 
 	this.speed = 5; 
@@ -30,7 +30,7 @@ function Obstacle(id, x, y) {
 
 	this.update = function(dinosaur) {
 		this.pos.x -= this.speed;
-		if(!dinosaur.alive) this.pos.x += this.speed;
+		// if(!dinosaur.alive) this.pos.x += this.speed;
 
 		if(	(dinosaur.pos.y > height - this.dHeight) &&
 				(dinosaur.pos.x + dinosaur.dWidth > this.pos.x && 

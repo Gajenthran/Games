@@ -21,6 +21,7 @@ function preload() {
 function setup() {
 	createCanvas(640, 480);
 	_dinosaur = new Entity();
+	_dinosaur.init();
 	_cactus.push(new Obstacle(
 		idObstacle.CACTUS01, 
 		_dinosaur.pos.x + width, 
@@ -30,9 +31,7 @@ function setup() {
 		_bg[i] = new Background(i);
 		_bg[i].init();
 	}
-	_delay = _cactusTime[0];
-	textFont(_font);
-
+	_delay = _cactusTime[0];	textFont(_font);
 }
 
 function draw() {
@@ -41,12 +40,15 @@ function draw() {
 
 	drawCactus();
 	drawDinosaur();
+	drawBackground();
+	showScore();
+}
+
+function drawBackground() {
 	for(var i = 0; i < idBg.NTILES; i++) {
 		_bg[i].update(_dinosaur);
-		_bg[i].show();
+		_bg[i].show(_dinosaur);
 	}
-	showScore();
-
 }
 
 function drawCactus() {
@@ -74,22 +76,27 @@ function drawDinosaur() {
 	var gravity = createVector(0, 0.3);
 	_dinosaur.applyForce(gravity);
 
-	if(!_dinosaur.alive)
-		gameOver();
-
 	_dinosaur.update();
 	_dinosaur.show();
 
+	if(!_dinosaur.alive)
+		gameOver();
 }
 
 function gameOver() {
 	textSize(30);
 	text("GAME OVER", _dinosaur.pos.x + width/2 - 180, 200);
+	noLoop();
 }
 
 function showScore() {
 	textSize(10);
 	text(_dinosaur.score, _dinosaur.pos.x + (width - 150), 50);
+}
+
+function mousePressed() {
+	if(_bg[idBg.RESTART].clicked(_dinosaur))
+		remove();
 }
 
 function keyPressed() {
