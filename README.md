@@ -7,3 +7,6 @@ iamGame groups all of my game under differents programming languages (C, Java). 
 
 ## Java
 - Mario_Like, realized via JavaFX, based on plateform games and in particular Mario Bros (https://en.wikipedia.org/wiki/Platform_game).
+
+## JavaScript
+- Gs Dinosaur, realized via p5.js, based on T-Rex Runner, one of Google's easter eggs (https://en.wikipedia.org/wiki/List_of_Google_Easter_eggs).
