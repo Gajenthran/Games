@@ -42,6 +42,9 @@ function draw() {
 	drawDinosaur();
 	drawBackground();
 	showScore();
+
+	if(!_dinosaur.alive)
+		gameOver();
 }
 
 function drawBackground() {
@@ -75,12 +78,8 @@ function drawCactus() {
 function drawDinosaur() {
 	var gravity = createVector(0, 0.3);
 	_dinosaur.applyForce(gravity);
-
 	_dinosaur.update();
 	_dinosaur.show();
-
-	if(!_dinosaur.alive)
-		gameOver();
 }
 
 function gameOver() {
@@ -91,7 +90,7 @@ function gameOver() {
 
 function showScore() {
 	textSize(10);
-	text(_dinosaur.score, _dinosaur.pos.x + (width - 150), 50);
+	text("| " + _dinosaur.score, _dinosaur.pos.x + (width - 200), 50);
 }
 
 function mousePressed() {
