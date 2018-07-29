@@ -14,7 +14,7 @@ function Obstacle(id, x, y) {
 
 	this.speed = 5; 
 
-	/*! \brief initialize the data (cordinates particularly) of the obstacle. */
+	/*! \brief initialize the obstacle data (cordinates particularly). */
 	this.init = function() {
 		switch(this.id) {
 			case idObstacle.CACTUS02:
@@ -30,7 +30,7 @@ function Obstacle(id, x, y) {
 		}
 	}
 
-	/*! \brief updating the data of the obstacle. */
+	/*! \brief updating the obstacle data. */
 	this.update = function(dinosaur) {
 		this.pos.x -= this.speed;
 		// if(!dinosaur.alive) this.pos.x += this.speed;
