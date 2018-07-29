@@ -20,11 +20,13 @@ var _img;
 /*! \brief font of the game. */
 var _font;
 
+/*! \brief load all the files (image, font). */
 function preload() {
-  _img = loadImage("files/background.png");
+ 	_img = loadImage("files/background.png");
  	_font = loadFont("files/PressStart2P.ttf");
 }
 
+/*! \brief create the canvas. Initialize all the data of the game. */
 function setup() {
 	createCanvas(640, 480);
 	_dinosaur = new Entity();
@@ -40,6 +42,7 @@ function setup() {
 	_delay = _cactusTime[0];	textFont(_font);
 }
 
+/*! \brief display all the elements of the game. */
 function draw() {
 	background(247);
 	translate(-_dinosaur.pos.x + 50, 0);
@@ -53,6 +56,7 @@ function draw() {
 		gameOver();
 }
 
+/*! \brief display the background of the game. */
 function drawBackground() {
 	for(var i = 0; i < idBg.NTILES; i++) {
 		_bg[i].update(_dinosaur);
@@ -60,6 +64,7 @@ function drawBackground() {
 	}
 }
 
+/*! \brief display the obstacles (cactus) of the game. */
 function drawCactus() {
 	var delay;
 	for(var i = _cactus.length-1; i >= 0; i--) {
@@ -81,6 +86,7 @@ function drawCactus() {
 	}
 }
 
+/*! \brief display the entity (dinosaur) of the game. */
 function drawDinosaur() {
 	var gravity = createVector(0, 0.3);
 	_dinosaur.applyForce(gravity);
@@ -88,22 +94,26 @@ function drawDinosaur() {
 	_dinosaur.show();
 }
 
+/*! \brief display the game over screen and stop the loop. */
 function gameOver() {
 	textSize(30);
 	text("GAME OVER", _dinosaur.pos.x + width/2 - 180, 200);
 	noLoop();
 }
 
+/*! \brief display the score. */
 function showScore() {
 	textSize(10);
 	text("| " + _dinosaur.score, _dinosaur.pos.x + (width - 200), 50);
 }
 
+/*! \brief all events when the mouse is pressed. */
 function mousePressed() {
 	if(_bg[idBg.RESTART].clicked(_dinosaur))
 		remove();
 }
 
+/*! \brief all events when the key is pressed. */
 function keyPressed() {
 	if(key == ' ' || keyCode == UP_ARROW) {
 		if(_dinosaur.canJump) {

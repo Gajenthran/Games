@@ -14,6 +14,7 @@ function Obstacle(id, x, y) {
 
 	this.speed = 5; 
 
+	/*! \brief initialize the data (cordinates particularly) of the obstacle. */
 	this.init = function() {
 		switch(this.id) {
 			case idObstacle.CACTUS02:
@@ -29,6 +30,7 @@ function Obstacle(id, x, y) {
 		}
 	}
 
+	/*! \brief updating the data of the obstacle. */
 	this.update = function(dinosaur) {
 		this.pos.x -= this.speed;
 		// if(!dinosaur.alive) this.pos.x += this.speed;
@@ -38,12 +40,14 @@ function Obstacle(id, x, y) {
 				dinosaur.alive = false;
 	}
 
+	/*! \brief return true when the element goes out of the screen. */
 	this.offscreen = function() {
 		if(this.pos.x < -this.dWidth) 
 			return true;
 		return false;
 	}
 
+	/*! \brief display the obstacle. */
 	this.show = function() {
 		image(_img, 
 			this.pos.x, this.pos.y - this.dHeight, this.dWidth, this.dHeight, 

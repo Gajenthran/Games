@@ -13,6 +13,7 @@ function Background(id) {
 
 	this.speed = 1; 
 
+	/*! \brief initialize the data (cordinates particularly) of the background. */
 	this.init = function() {
 		switch(this.id) {
 			case idBg.ROAD:
@@ -30,6 +31,7 @@ function Background(id) {
 		}
 	}
 
+	/*! \brief updating the data of the background. */
 	this.update = function(dinosaur) {
 		if(this.id == idBg.RESTART)
 			this.x = (dinosaur.pos.x - 50) + width/2 - 20;
@@ -37,6 +39,7 @@ function Background(id) {
 			this.x += this.speed;
 	}
 
+	/*! \brief return true if the user clicks one of the elements of the background. */
 	this.clicked = function(dinosaur) {
 		if(	mouseX >= this.x - (dinosaur.pos.x - 50) && 
 				mouseY <= this.y &&
@@ -46,6 +49,7 @@ function Background(id) {
 		return false;
 	}
 
+	/*! \brief display the elements of the background. */
 	this.show = function(dinosaur) {
 		if(this.id == idBg.RESTART && dinosaur.alive)
 			return false;

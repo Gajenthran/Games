@@ -18,10 +18,7 @@ function Entity() {
 	this.alive = true;
 	this.canJump = 1;
 
-	this.applyForce = function(force) {
-		this.acc.add(force);
-	} 
-
+	/*! \brief updating entity's data. */
 	this.update = function() {
 		/* if(!this.alive)
 			return false; */
@@ -40,6 +37,11 @@ function Entity() {
 		return true;
 	}
 
+	this.applyForce = function(force) {
+		this.acc.add(force);
+	} 
+
+	/*! \brief display the entity. */
 	this.show = function() {
 		var sx;
 		if(frameCount % 2 == 0 && this.canJump != 0)
