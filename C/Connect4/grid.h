@@ -5,15 +5,18 @@
 
 #define NCOUNT 4
 #define NALIGN 4
+#define DRAW 3
 
 enum verif { HORIZONTAL, VERTICAL, DIAG_GAUCHE, DIAG_DROITE, NVERIF };
 enum dir { GAUCHE, HAUT, DROITE, BAS, NDIR };
-enum discs { EMPTY, RED, YELLOW, NDISCS };
+enum disc { RED, YELLOW, EMPTY, NDISCS};
 
 void	initGrid(Game *g);
 int 	fullGrid(Game *g);
 int 	validPosition(Game *g, int x, int y);
-int 	checkAlignment(Game *g, int color, int x, int y, int dx, int dy);
+void 	alignment(Game *g, int color, int x, int y, int dx, int dy, int *p);
+int 	countDiscs(Game *g);
+void 	countAlignments(Game *g, int *p);
 int 	checkWinner(Game *g);
 
 

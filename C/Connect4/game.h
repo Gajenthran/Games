@@ -15,6 +15,7 @@ typedef struct Player Player;
 struct Player {
 	int color;
 	int score;
+	int ia;
 	char* name;
 	int won;
 };

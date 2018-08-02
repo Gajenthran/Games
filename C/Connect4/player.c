@@ -7,9 +7,10 @@
 void initPlayer(Game *g) {
 	int pId;
 	for(pId = 0; pId < NPLAYER; pId++) {
-		g->player[pId].color = pId+1;
+		g->player[pId].color = pId;
 		g->player[pId].score = 0;
 		g->player[pId].won = 0;
+		g->player[pId].ia = (pId == YELLOW ? 1 : 0);
 	}
 }
 
@@ -44,4 +45,101 @@ int putDisc(Game *g, Driver *dr, int pId) {
 		}
 	}
 	return 0;
+}
+
+
+void iaMove(Game *g, int depth) {
+	int max = -1000;
+	int tmp, col, row;
+	int r, c;
+
+	for(r = g->rows-1; r >= 0; r--) {
+		for(c = 0; c < g->cols; c++) {
+			if(g->grid[r * g->cols + c] == EMPTY) {
+				// ((r+1) <= (g->rows-1) && g->grid[(r+1) * g->cols + c] != EMPTY))
+			 	g->grid[r * g->cols + c] = YELLOW;
+			 	tmp = Min(g, depth-1);
+
+			 	if(tmp > max) {
+			 		max = tmp;
+			 		col = c;
+			 		row = r;
+			 	}
+				
+				g->grid[r * g->cols + c] = EMPTY;
+			}
+		}
+	}
+
+	// printf("%d - %d\n", row, col);
+	g->grid[row * g->cols + col] = YELLOW;
+}
+
+int Max(Game *g, int depth) {
+	if(depth == 0 || checkWinner(g))
+		return eval(g, 1);
+
+	int max = -1000;
+	int r, c, tmp;
+
+	for(r = g->rows-1; r >= 0; r--) {
+		for(c = 0; c < g->cols; c++) {
+			if(g->grid[r * g->cols + c] == EMPTY) {
+				// (r == (g->rows-1) ||
+				// ((r+1) <= (g->rows-1) && g->grid[(r+1) * g->cols + c] != EMPTY)) )
+			 	g->grid[r * g->cols + c] = YELLOW;
+			 	tmp = Min(g, depth-1);
+
+			 	if(tmp > max)
+			 		max = tmp;
+			 	g->grid[r * g->cols + c] = EMPTY;
+			}
+		}
+	}
+	return max;
+}
+
+int Min(Game *g, int depth) {
+	if(depth == 0 || checkWinner(g))
+		return eval(g, -1);
+
+	int min = 1000;
+	int r, c, tmp;
+
+	for(r = g->rows-1; r >= 0; r--) {
+		for(c = 0; c < g->cols; c++) {
+			if( g->grid[r * g->cols + c] == EMPTY) {
+				// (r == (g->rows-1) ||
+				// ((r+1) <= (g->rows-1) && g->grid[(r+1) * g->cols + c] != EMPTY)) )
+			 	g->grid[r * g->cols + c] = RED;
+			 	tmp = Max(g, depth-1);
+
+			 	if(tmp < min)
+			 		min = tmp;
+			 	g->grid[r * g->cols + c] = EMPTY;
+			}
+		}
+	}
+	return min;
+}
+
+int eval(Game *g, int coeff) {
+	int status, nbDiscs;
+	nbDiscs = countDiscs(g);
+
+	if((status = checkWinner(g)) >= 0) {
+		switch(status) {
+			case RED:
+				return 1000 - nbDiscs;
+			case YELLOW:
+				return -1000 + nbDiscs;
+			default:
+				return 0;
+		}
+	}
+
+	int p[NPLAYER] = {0};
+	countAlignments(g, p);
+
+	return p[RED] - p[YELLOW];
 }

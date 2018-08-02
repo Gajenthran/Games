@@ -3,6 +3,7 @@
 
 #include "sdl_driver.h"
 #include "game.h"
+#include "grid.h"
 
 void	displayMenu(Game *g, Driver *dr);
 void	displayGrid(Game *g, Driver *dr);

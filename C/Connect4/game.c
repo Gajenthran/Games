@@ -5,12 +5,13 @@
 #include "display.h"
 #include "player.h"
 
-/*! \brief game grid (size : ROWS * COLS) */
+/*! \brief game grid (size : ROWS * COLS). */
 static int _grid[ROWS * COLS];
-/*! \brief all the player in the game (= 2)*/
+/*! \brief all the player in the game (= 2). */
 static Player _player[NPLAYER];
-/*! \brief the actual state of the game : menu, playing or end of the game */
+/*! \brief the actual state of the game : menu, playing or end of the game. */
 static int _gameState = MENU;
+static int _pId = 0;
 
 /*! \brief initialize the game, ie. initialize the SDL's parameters 
  * the player's data and the grid. Morever, call the function callback. */
@@ -20,7 +21,6 @@ void initGame(Game *g, Driver *dr) {
 	g->grid = _grid;
 	g->player = _player;
 	g->state = _gameState;
-	g->round = 0;
 
 	initSDL(dr, 640, 480);
 	initPlayer(g);
@@ -38,17 +38,30 @@ void menu(Game *g, Driver *dr) {
 			dr->mTexCoord[i].h + dr->mTexCoord[i].y))
 			g->state = i-1;
 	}
+
+	if(g->state == END)
+		exit(0);
 }
 
 /*! \brief the interface of the game with the display of the grid and the current
  * player to play. Call the function putDisc, fullGrid and checkWinner. */
 void play(Game *g, Driver* dr) {
-	static int pId = 0;
-	if(putDisc(g, dr, pId)) {
-		if(checkWinner(g)) { g->player[pId].won = 1; g->state = END; }
-		if(fullGrid(g)) g->state = END;
-		pId = (pId + 1) % NPLAYER;
+	int status;
+
+	if(g->player[_pId].ia) {
 		g->round++;
+		iaMove(g, 2);
+		_pId = (_pId + 1) % NPLAYER;
+	}
+
+	if(putDisc(g, dr, _pId)) {
+		g->round++;
+		status = checkWinner(g);
+		if(status >= 0) {
+			g->state = END;
+			return;
+		}
+		_pId = (_pId + 1) % NPLAYER;
 	}
 }
 
@@ -63,6 +76,8 @@ void end(Game *g, Driver *dr) {
 		g->state = MENU;
 		initPlayer(g);
 		initGrid(g);
+		_pId = 0;
+		g->round = 0;
 	}
 
 	if(elementClicked(dr, dr->eTexCoord[TEX_END].x, 
@@ -72,7 +87,7 @@ void end(Game *g, Driver *dr) {
 		dr->in.quit = 1;
 }
 
-/*! \brief the principal function which updates events, the displays of the elements */
+/*! \brief the principal function which updates events, the displays of the elements. */
 void callback(Game* g, Driver* dr) {
 	while(!dr->in.quit){
 		clear(dr);

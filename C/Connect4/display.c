@@ -12,7 +12,7 @@ void displayBackground(Game* g, Driver* dr) {
 	}
 }
 
-/*! \brief display the name of the current player */
+/*! \brief display the name of the current player. */
 void displayPlayerName(Game *g, Driver *dr) {
 	int round = g->round % NPLAYER, r, c;
 	SDL_SetTextureAlphaMod(dr->gTex[TEX_DISCS], 255);
@@ -47,7 +47,7 @@ void displayPlayerRound(Game *g, Driver *dr) {
 	for(r = g->rows + DY - 2; r < g->rows + DY; r++) {
 		for(c = g->cols + DX + 2; c <  g->cols + DX + 4; c++) {
 			SDL_Rect dst = { .x = c * SZ, .y = r * SZ, .w = SZ, .h = SZ };
-			SDL_Rect src = { .x = g->player[round].color * (SZ * 2), .y = 0, .w = SZ, .h = SZ };
+			SDL_Rect src = { .x = g->player[round].color * SZ, .y = 0, .w = SZ, .h = SZ };
 			SDL_RenderCopy(dr->ren, dr->gTex[TEX_DISCS], &src, &dst);
 		}
 	}
@@ -108,13 +108,14 @@ void displayGame(Game *g, Driver *dr) {
 void displayGrid(Game *g, Driver *dr) {
 	int r, c;
 	unsigned int nbRows = dr->windowHeight/SZ, nbCols = dr->windowWidth/SZ;
+
 	for(r = DY; r < g->rows + DY; r++) {
 		for(c = DX; c < g->cols + DX; c++) {
 			SDL_SetTextureAlphaMod(dr->gTex[TEX_DISCS], 150);
 			SDL_Rect dst = { .x = c * SZ, .y = r * SZ, .w = SZ, .h = SZ };
 			if(displayHighlightColumn(g, dr, dst.x) && g->state == GAME)
 				SDL_SetTextureAlphaMod(dr->gTex[TEX_DISCS], 255);
-			SDL_Rect src = { .x = g->grid[(r-DY) * g->cols + (c-DX)] * (SZ * 2), .y = 0, .w = SZ, .h = SZ };
+			SDL_Rect src = { .x = g->grid[(r-DY) * g->cols + (c-DX)] * SZ, .y = 0, .w = SZ, .h = SZ };
 			SDL_RenderCopy(dr->ren, dr->gTex[TEX_DISCS], &src, &dst);
 		}
 	}
