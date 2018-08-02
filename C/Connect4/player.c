@@ -10,7 +10,7 @@ void initPlayer(Game *g) {
 		g->player[pId].color = pId;
 		g->player[pId].score = 0;
 		g->player[pId].won = 0;
-		g->player[pId].ia = (pId == YELLOW ? 1 : 0);
+		g->player[pId].ia = (pId == RED ? 1 : 0);
 	}
 }
 
@@ -57,7 +57,7 @@ void iaMove(Game *g, int depth) {
 		for(c = 0; c < g->cols; c++) {
 			if(g->grid[r * g->cols + c] == EMPTY) {
 				// ((r+1) <= (g->rows-1) && g->grid[(r+1) * g->cols + c] != EMPTY))
-			 	g->grid[r * g->cols + c] = YELLOW;
+			 	g->grid[r * g->cols + c] = RED;
 			 	tmp = Min(g, depth-1);
 
 			 	if(tmp > max) {
@@ -72,12 +72,12 @@ void iaMove(Game *g, int depth) {
 	}
 
 	// printf("%d - %d\n", row, col);
-	g->grid[row * g->cols + col] = YELLOW;
+	g->grid[row * g->cols + col] = RED;
 }
 
 int Max(Game *g, int depth) {
-	if(depth == 0 || checkWinner(g))
-		return eval(g, 1);
+	if(depth == 0 || checkWinner(g) >= 0)
+		return eval(g);
 
 	int max = -1000;
 	int r, c, tmp;
@@ -87,7 +87,7 @@ int Max(Game *g, int depth) {
 			if(g->grid[r * g->cols + c] == EMPTY) {
 				// (r == (g->rows-1) ||
 				// ((r+1) <= (g->rows-1) && g->grid[(r+1) * g->cols + c] != EMPTY)) )
-			 	g->grid[r * g->cols + c] = YELLOW;
+			 	g->grid[r * g->cols + c] = GREEN;
 			 	tmp = Min(g, depth-1);
 
 			 	if(tmp > max)
@@ -100,8 +100,8 @@ int Max(Game *g, int depth) {
 }
 
 int Min(Game *g, int depth) {
-	if(depth == 0 || checkWinner(g))
-		return eval(g, -1);
+	if(depth == 0 || checkWinner(g) >= 0)
+		return eval(g);
 
 	int min = 1000;
 	int r, c, tmp;
@@ -123,7 +123,7 @@ int Min(Game *g, int depth) {
 	return min;
 }
 
-int eval(Game *g, int coeff) {
+int eval(Game *g) {
 	int status, nbDiscs;
 	nbDiscs = countDiscs(g);
 
@@ -131,7 +131,7 @@ int eval(Game *g, int coeff) {
 		switch(status) {
 			case RED:
 				return 1000 - nbDiscs;
-			case YELLOW:
+			case GREEN:
 				return -1000 + nbDiscs;
 			default:
 				return 0;
@@ -139,7 +139,8 @@ int eval(Game *g, int coeff) {
 	}
 
 	int p[NPLAYER] = {0};
-	countAlignments(g, p);
+	countAlignments(g, p, NCOUNT-1);
 
-	return p[RED] - p[YELLOW];
+	printf("%d - %d\n", p[RED], p[GREEN]);
+	return p[RED] - p[GREEN];
 }

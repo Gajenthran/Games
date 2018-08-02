@@ -33,7 +33,7 @@ int validPosition(Game *g, int x, int y) {
 			x >= 0 && x < g->cols);
 }
 
-void alignment(Game *g, int color, int x, int y, int dx, int dy, int *p) {
+void alignment(Game *g, int color, int x, int y, int dx, int dy, int *p, int n) {
 	int i, count = 0, tmp;
 	while(validPosition(g, x, y)) {
 		if(g->grid[y * g->cols + x] == color)
@@ -41,7 +41,7 @@ void alignment(Game *g, int color, int x, int y, int dx, int dy, int *p) {
 		else
 			return;
 
-		if(count == NCOUNT) {
+		if(count == n) {
 			p[color]++;
 			return;
 		}
@@ -52,7 +52,7 @@ void alignment(Game *g, int color, int x, int y, int dx, int dy, int *p) {
 	}
 }
 
-void countAlignments(Game *g, int *p) {
+void countAlignments(Game *g, int *p, int n) {
 	const int dirx[] = {-1,  0, 1, 0};
 	const int diry[] = { 0, -1, 0, 1};
 	const int verif[NVERIF][2] = {
@@ -71,7 +71,7 @@ void countAlignments(Game *g, int *p) {
 						g,
 						g->grid[r * g->cols + c], 
 						c, r, 
-						verif[align][0], verif[align][1], p);
+						verif[align][0], verif[align][1], p, n);
 				}
 			}
 		}
@@ -81,7 +81,7 @@ void countAlignments(Game *g, int *p) {
 /*! \brief check if there is a winner using the function checkAlignment. */
 int checkWinner(Game *g) {
 	int p[NPLAYER] = {0}, i;
-	countAlignments(g, p);
+	countAlignments(g, p, NCOUNT);
 	for(i = 0; i < NPLAYER; i++) {
 		if(p[i]) {
 			g->player[i].won = 1;

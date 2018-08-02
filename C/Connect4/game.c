@@ -48,11 +48,16 @@ void menu(Game *g, Driver *dr) {
 void play(Game *g, Driver* dr) {
 	int status;
 
-	if(g->player[_pId].ia) {
+	/* if(g->player[_pId].ia) {
 		g->round++;
-		iaMove(g, 2);
+		iaMove(g, 3);
+		status = checkWinner(g);
+		if(status >= 0) {
+			g->state = END;
+			return;
+		}
 		_pId = (_pId + 1) % NPLAYER;
-	}
+	} */
 
 	if(putDisc(g, dr, _pId)) {
 		g->round++;

@@ -12,6 +12,6 @@ int 	putDisc(Game *g, Driver *dr, int pId);
 void 	iaMove(Game *g, int depth);
 int 	Min(Game *g, int depth);
 int 	Max(Game *g, int depth);
-int 	eval(Game *g, int coeff);
+int 	eval(Game *g);
 
 #endif
